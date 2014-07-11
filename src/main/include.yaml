@@ -1,3 +1,0 @@
-handlers:
-- url: /
-  script: src.main.views.app
