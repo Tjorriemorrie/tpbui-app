@@ -17,9 +17,12 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.sessions',
+    'django.contrib.staticfiles',
+    'django.contrib.messages',
     'djangotoolbox',
     'autoload',
     'dbindexer',
+
     'main',
 
     # djangoappengine should come last, so it can override a few manage.py commands
@@ -33,6 +36,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -45,8 +49,16 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # corresponding output. Helps a lot with print-debugging.
 TEST_RUNNER = 'djangotoolbox.test.CapturingTestSuiteRunner'
 
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(SITE_ROOT, STATIC_URL),
+)
+
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
+
+ALLOWED_HOSTS = ['.appspot.com']

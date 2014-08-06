@@ -30,5 +30,14 @@ handlers:
   static_dir: django/contrib/admin/static/admin
   expiration: '0'
 
+- url: /static/
+  static_dir: static/
+  expiration: '0'
+
 - url: /.*
+  login: required
   script: djangoappengine.main.application
+
+- url: /scrape
+  script: djangoappengine.main.application
+  login: admin
