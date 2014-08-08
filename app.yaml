@@ -3,6 +3,7 @@ version: 1
 runtime: python27
 api_version: 1
 threadsafe: yes
+default_expiration: "10s"
 
 builtins:
 - remote_api: on
@@ -22,22 +23,31 @@ handlers:
 - url: /_ah/stats/.*
   script: djangoappengine.appstats.application
 
+#- url: /static/django_tables2/.*
+#  static_dir: /gaenv_lib/django_tables2/static
+#  expiration: '0'
+
 - url: /media/admin
   static_dir: django/contrib/admin/media
-  expiration: '0'
 
 - url: /static/admin
   static_dir: django/contrib/admin/static/admin
-  expiration: '0'
 
 - url: /static/
   static_dir: static/
-  expiration: '0'
+
+- url: /scrape
+  script: djangoappengine.main.application
+  login: admin
 
 - url: /.*
   login: required
   script: djangoappengine.main.application
 
-- url: /scrape
-  script: djangoappengine.main.application
-  login: admin
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^/.idea/.*$

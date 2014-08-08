@@ -60,3 +60,13 @@ indexes:
   - name: code
   - name: __key__
     direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: __key__
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: size

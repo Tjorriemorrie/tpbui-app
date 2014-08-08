@@ -5,6 +5,10 @@ from djangoappengine.settings_base import *
 
 import os
 
+DEBUG = True
+
+ALLOWED_HOSTS = ['.appspot.com']
+
 # Activate django-dbindexer for the default database
 DATABASES['native'] = DATABASES['default']
 DATABASES['default'] = {'ENGINE': 'dbindexer', 'TARGET': 'native'}
@@ -22,6 +26,9 @@ INSTALLED_APPS = (
     'djangotoolbox',
     'autoload',
     'dbindexer',
+    'django_print_settings',
+    'compressor',
+    'django_tables2',
 
     'main',
 
@@ -43,6 +50,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
     'django.core.context_processors.media',
+    'django.core.context_processors.static',
 )
 
 # This test runner captures stdout and associates tracebacks with their
@@ -52,13 +60,16 @@ TEST_RUNNER = 'djangotoolbox.test.CapturingTestSuiteRunner'
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 STATICFILES_DIRS = (
-    os.path.join(SITE_ROOT, STATIC_URL),
+    os.path.join(SITE_ROOT, 'vendor'),
 )
-
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
-
-ALLOWED_HOSTS = ['.appspot.com']

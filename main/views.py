@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
-from main.models import Category
+from main.models import *
+# from main.tables import *
+# from django_tables2 import RequestConfig
 
 
 def home(request):
@@ -11,10 +13,13 @@ def home(request):
     })
 
 
-def category(request, categoryId):
-    category = get_object_or_404(Category, pk=categoryId)
+def category(request, code):
+    category = get_object_or_404(Category, code=code)
+    # table = TorrentTable(category.torrent_set.all())
+    # RequestConfig(request).configure(table)
     context = {
-        'category': category
+        'category': category,
+        # 'table': table,
     }
     return render(request, 'main/category.html', context)
 

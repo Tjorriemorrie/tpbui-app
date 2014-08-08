@@ -21,7 +21,7 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" role="button" href="#"><span class="text-muted">{{ group.code }}</span> {{ group.name }} <span class="caret"></span></a>
                         <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
                             {% for category in group.category_set.all %}
-                                <li role="presentation"><a href="#" tabindex="-1" role="menuitem"><span class="text-muted">{{ category.code }}</span> {{ category.name }} </a></li>
+                                <li role="presentation"><a href="{% url 'category' category.code %}" tabindex="-1" role="menuitem"><span class="text-muted">{{ category.code }}</span> {{ category.name }} </a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -31,7 +31,7 @@
             {% getNavUrlLogout %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" role="button" href="#">{{ request.user.gae.nickname }} <span class="caret"></span></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" role="button" href="#">{{ request.user.email }} <span class="caret"></span></a>
                     <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
                         <li role=""><a href="{{ urlLogout }}" tabindex="-1" role="menuitem">Log out</a></li>
                     </ul>

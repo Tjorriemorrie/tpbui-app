@@ -1,3 +1,7 @@
 google-api-python-client
+django-print-settings
+django-compressor
 requests
 beautifulsoup4
+django-tables2
+six
