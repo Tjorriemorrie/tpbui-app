@@ -1,14 +1,19 @@
 {% load staticfiles %}
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
 
     {% block css %}
-        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link href="{{ STATIC_URL }}main/css/main.less" rel="stylesheet/less"/>
+		{% if debug %}
+	        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
+            <link href="{{ STATIC_URL }}main/css/main.less" rel="stylesheet/less"/>
+		{% else %}
+	        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	        <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+            <link href="{{ STATIC_URL }}main/css/main.css" rel="stylesheet"/>
+		{% endif %}
     {% endblock %}
 
     {% block preload_js %}
@@ -33,9 +38,14 @@
 
 
 {% block js %}
-    <script src="{{ STATIC_URL }}jquery/dist/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="{{ STATIC_URL }}less.js/dist/less-1.7.4.min.js"></script>
+	{% if debug %}
+	    <script src="{{ STATIC_URL }}jquery/dist/jquery.js"></script>
+	    <script src="{{ STATIC_URL }}bootstrap/dist/js/bootstrap.js"></script>
+	    <script src="{{ STATIC_URL }}less.js/dist/less-1.7.4.js"></script>
+	{% else %}
+	    <script src="{{ STATIC_URL }}jquery/dist/jquery.min.js"></script>
+	    <script src="{{ STATIC_URL }}bootstrap/dist/js/bootstrap.min.js"></script>
+	{% endif %}
 {% endblock %}
 
 </body>

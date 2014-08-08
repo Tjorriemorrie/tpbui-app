@@ -14,6 +14,9 @@ from google.appengine.api import users
 class CategoryGroup(models.Model):
     name = models.CharField(max_length=45)
     code = models.SmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
 
     def __unicode__(self):
         return '{0} {1}'.format(self.code, self.name)
@@ -28,6 +31,8 @@ class Category(models.Model):
     categoryGroup = models.ForeignKey(CategoryGroup)
     name = models.CharField(max_length=45)
     code = models.SmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __unicode__(self):
         return '{0} {1}'.format(self.code, self.name)
@@ -45,13 +50,15 @@ class Torrent(models.Model):
     title = models.CharField(max_length=255)
     files = models.IntegerField()
     size = models.BigIntegerField()
-    datetime = models.DateTimeField()
+    uploaded_at = models.DateTimeField()
     user = models.CharField(max_length=45)
     seeders = models.IntegerField()
     leechers = models.IntegerField()
     img = models.CharField(max_length=255)
     magnet = models.CharField(max_length=255)
     nfo = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         return '{0}'.format(self.title)

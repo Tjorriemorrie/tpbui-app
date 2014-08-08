@@ -69,4 +69,21 @@ indexes:
 - kind: main_torrent
   properties:
   - name: category_id
+  - name: files
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: files
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: seeders
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
   - name: size

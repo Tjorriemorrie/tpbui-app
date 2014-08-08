@@ -27,8 +27,8 @@ INSTALLED_APPS = (
     'autoload',
     'dbindexer',
     'django_print_settings',
-    'compressor',
     'django_tables2',
+    'bootstrap3',
 
     'main',
 
@@ -64,10 +64,10 @@ STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 STATICFILES_DIRS = (
     os.path.join(SITE_ROOT, 'vendor'),
 )
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)

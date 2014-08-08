@@ -1,1 +1,1 @@
-}));
+/Users/jaco/projects/tpbui-app/vendor/jquery/src/outro.js

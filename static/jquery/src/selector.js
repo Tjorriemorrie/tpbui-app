@@ -1,1 +1,1 @@
-define([ "./selector-sizzle" ]);
+/Users/jaco/projects/tpbui-app/vendor/jquery/src/selector.js

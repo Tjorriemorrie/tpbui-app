@@ -1,9 +1,1 @@
-define([
-	"../var/support"
-], function( support ) {
-
-support.focusinBubbles = "onfocusin" in window;
-
-return support;
-
-});
+/Users/jaco/projects/tpbui-app/vendor/jquery/src/event/support.js

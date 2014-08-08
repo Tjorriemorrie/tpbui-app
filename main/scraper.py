@@ -69,7 +69,7 @@ class Scraper():
             # print 'size'
             # print det.find_all('dd')[2]
             item['size'] = self.patternSize.match(det.find_all('dd')[2].text).group(1)
-            item['datetime'] = datetime.datetime.strptime(det.find_all('dd')[4].text.strip(), '%Y-%m-%d %H:%M:%S %Z')
+            item['uploaded_at'] = datetime.datetime.strptime(det.find_all('dd')[4].text.strip(), '%Y-%m-%d %H:%M:%S %Z')
             item['user'] = det.find_all('dd')[5].text.strip()
             item['seeders'] = det.find_all('dd')[6].text.strip()
             item['leechers'] = det.find_all('dd')[7].text.strip()
