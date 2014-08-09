@@ -7,15 +7,15 @@ from django_tables2 import RequestConfig
 
 
 def home(request):
-    categories = Category.objects.all()
-    return render(request, 'main/home.html', {
-        'categories': categories
-    })
+    context = {}
+    return render(request, 'main/home.html', context)
 
 
 def category(request, code):
     category = get_object_or_404(Category, code=code)
-    table = TorrentTable(category.torrent_set.all(), order_by=('-seeders',))
+    # uts = UserTorrent.objects.filter(user=request.user, )
+    table = TorrentTable(category.torrent_set.all(), order_by=('-uploaded_at',))
+    table.user = request.user
     RequestConfig(request).configure(table)
     context = {
         'category': category,
@@ -24,13 +24,15 @@ def category(request, code):
     return render(request, 'main/category.html', context)
 
 
-# def logout(request):
-#     logout(request)
-#     return redirect('home')
-
-
 def scrape(request):
     from main.scraper import Scraper
     scraper = Scraper()
     scraper.run()
+    return HttpResponse(status=200)
+
+
+def download(request, tpb_id):
+    torrent = get_object_or_404(Torrent, tpb_id=tpb_id)
+    ut = UserTorrent.objects.create(user=request.user, torrent=torrent, category=torrent.category, categoryGroup=torrent.category.categoryGroup)
+    ut.save()
     return HttpResponse(status=200)

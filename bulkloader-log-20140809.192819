@@ -1,0 +1,24 @@
+[INFO     2014-08-09 19:28:19,835 bulkloader.py] Logging to bulkloader-log-20140809.192819
+[INFO     2014-08-09 19:28:19,835 bulkloader.py] Throttling transfers:
+[INFO     2014-08-09 19:28:19,836 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-08-09 19:28:19,836 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-08-09 19:28:19,836 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-08-09 19:28:19,836 bulkloader.py] Batch Size: 10
+[INFO     2014-08-09 19:28:19,836 bulkloader.py] Opening database: bulkloader-progress-20140809.192819.sql3
+[INFO     2014-08-09 19:28:19,841 bulkloader.py] Opening database: bulkloader-results-20140809.192819.sql3
+[DEBUG    2014-08-09 19:28:19,849 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,849 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,850 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,850 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,850 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,851 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,851 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,851 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,851 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,852 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: started
+[DEBUG    2014-08-09 19:28:19,852 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = tpbgui.appspot.com
+[DEBUG    2014-08-09 19:28:19,858 bulkloader.py] Bulkloader using app_id: s~tpbgui
+[INFO     2014-08-09 19:28:19,858 bulkloader.py] Connecting to tpbgui.appspot.com/_ah/remote_api
+[ERROR    2014-08-09 19:28:34,564 bulkloader.py] Unable to download kind stats for all-kinds download.
+[ERROR    2014-08-09 19:28:34,564 bulkloader.py] Kind stats are generated periodically by the appserver
+[ERROR    2014-08-09 19:28:34,564 bulkloader.py] Kind stats are not available on dev_appserver.

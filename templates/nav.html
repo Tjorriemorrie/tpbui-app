@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">TPB UI</a>
+            <a class="navbar-brand" href="{% url 'home' %}">TPB UI</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -31,7 +31,7 @@
             {% getNavUrlLogout %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" role="button" href="#">{{ request.user.email }} <span class="caret"></span></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" role="button" href="#">{{ request.user.username }} <span class="caret"></span></a>
                     <ul aria-labelledby="drop3" role="menu" class="dropdown-menu">
                         <li role=""><a href="{{ urlLogout }}" tabindex="-1" role="menuitem">Log out</a></li>
                     </ul>

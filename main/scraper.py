@@ -2,11 +2,18 @@ from main.models import *
 import re
 import time
 import datetime
+import arrow
 
 
 class Scraper():
     urlBase = 'http://thepiratebay.se'
     patternSize = re.compile(r'^.*?\([^\d]*(\d+)[^\d]*\).*$', re.U)
+    group = None
+
+    def __init__(self):
+        from google.appengine.api import urlfetch
+        urlfetch.set_default_fetch_deadline(60)
+        self.group = (int(arrow.utcnow().format('HH')) % 6 + 1) * 100
 
 
     def run(self):
@@ -14,11 +21,14 @@ class Scraper():
 
 
     def runDefault(self):
-        categoryGroups = CategoryGroup.objects.all()
-        for categoryGroup in categoryGroups:
-            for category in categoryGroup.category_set.all():
-                self.runCategory(category)
-                time.sleep(10)
+        categoryGroup = CategoryGroup.objects.get(code=self.group)
+        for category in categoryGroup.category_set.all():
+            # category = Category.objects.get(code=207)
+            # print 'category'
+            # print category
+            self.runCategory(category)
+            # break
+            time.sleep(5)
 
 
     def runCategory(self, category, page=0):
@@ -49,7 +59,6 @@ class Scraper():
 
 
     def parseResultList(self, resultList):
-        # todo make the img a base64 encoded string
         data = []
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(resultList)
@@ -62,30 +71,33 @@ class Scraper():
             resultDetail = self.scrapeDetail(self.urlBase + link['href'])
             det = BeautifulSoup(resultDetail)
             # print det.prettify().encode('utf8')
+
+            # requireds
             item['title'] = det.find('div', id='title').text.strip()
-            item['files'] = det.find_all('a')[8].text.strip()
-            # self.patternSize.match(det.find_all('dd')[2].text).group()
-            # print det.find_all('dd')[2].text.split('(')[1]
-            # print 'size'
-            # print det.find_all('dd')[2]
-            item['size'] = self.patternSize.match(det.find_all('dd')[2].text).group(1)
-            item['uploaded_at'] = datetime.datetime.strptime(det.find_all('dd')[4].text.strip(), '%Y-%m-%d %H:%M:%S %Z')
-            item['user'] = det.find_all('dd')[5].text.strip()
-            item['seeders'] = det.find_all('dd')[6].text.strip()
-            item['leechers'] = det.find_all('dd')[7].text.strip()
-            item['img'] = 'http:' + det.find_all('img', title='picture')[0]['src']
+            item['files'] = det.find('dt', text=re.compile('Files:')).findNext('dd').text.strip()
+            item['size'] = self.patternSize.match(det.find('dt', text=re.compile('Size:')).findNext('dd').text).group(1)
+            item['uploaded_at'] = datetime.datetime.strptime(det.find('dt', text=re.compile('Uploaded:')).findNext('dd').text.strip(), '%Y-%m-%d %H:%M:%S %Z')
+            item['user'] = det.find('dt', text=re.compile('By:')).findNext('dd').text.strip()
+            item['seeders'] = det.find('dt', text=re.compile('Seeders:')).findNext('dd').text.strip()
+            item['leechers'] = det.find('dt', text=re.compile('Leechers:')).findNext('dd').text.strip()
             item['magnet'] = det.find_all('a', title='Get this torrent')[0]['href']
             item['nfo'] = det.find_all('div', class_='nfo')[0].text.strip()
+
+            # optionals
+            if det.find('div', class_='torpicture'):
+                item['img'] = 'http:' + det.find_all('img', title='picture')[0]['src']
+            else:
+                item['img'] = 'http://www.thepiratebay.se/static/img/tpblogo_sm_ny.gif'
+
             data.append(item)
             # print 'item'
             # print item
-            break
+            # break
             time.sleep(1)
         return data
 
 
     def saveData(self, data, category):
-        # todo add this to a transaction
         for item in data:
             item['category'] = category
             torrent, created = Torrent.objects.get_or_create(tpb_id=item['tpb_id'], defaults=item)

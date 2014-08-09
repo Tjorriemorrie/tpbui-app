@@ -15,6 +15,10 @@
 
 {% block css %}
 	{{ block.super }}
-{#	<link href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" rel="stylesheet">#}
 	<link href="{% static 'tables-bootstrap/bootstrap-tables2.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+	{{ block.super }}
+	<script src="{% static 'main/js/download.js' %}"></script>
 {% endblock %}

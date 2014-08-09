@@ -1,26 +1,33 @@
 import django_tables2 as tables
+import arrow
 from main.models import *
+from django.utils.safestring import mark_safe
 
 
 class TorrentTable(tables.Table):
-    # title = tables.Column(verbose_name="fuck")
-    # created_at = tables.DateColumn()
+    download = tables.Column(verbose_name=' ', empty_values=())
+    tr_class = tables.Column(visible=False, empty_values=())
 
     class Meta:
         model = Torrent
         # fields = ('tpb_id',)
-        # sequence = ('tpb_id',)
-        exclude = (
-            'id',
-            'category',
-            'img',
-            'magnet',
-            'nfo',
-            'created_at',
-            'updated_at',
-        )
+        sequence = ('download', 'title', 'seeders', '...', 'files')
+        exclude = ('id', 'tpb_id', 'leechers', 'category', 'img', 'magnet', 'nfo', 'created_at', 'updated_at',)
         # add class="paleblue" to <table> tag
-        attrs = {"class": "paleblue"}
+        # attrs = {"class": "paleblue"}
+
+    def render_tr_class(self, record):
+        ut = UserTorrent.objects.get(user=self.user, torrent=record)
+        return 'downloaded' if ut else ''
+
+    def render_download(self, record):
+        html = r'<a href="%s" data-id="%s"><span class="glyphicon glyphicon-download"></span></a>' % (record.magnet, record.tpb_id)
+        return mark_safe(html)
+
+    def render_title(self, value, record):
+        html = '<img src="%s" class="row-icon" />' % record.img
+        html += ' <a href="http://www.thepiratebay.se/torrent/%s" target="_newtab">%s</a>' % (record.tpb_id, value)
+        return mark_safe(html)
 
     def render_size(self, value):
         levels = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -38,3 +45,6 @@ class TorrentTable(tables.Table):
             value = int(value)
 
         return '{0} {1}'.format(value, levels[cnt])
+
+    def render_uploaded_at(self, value):
+        return arrow.get(value).humanize()

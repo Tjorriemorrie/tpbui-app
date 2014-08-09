@@ -1,6 +1,4 @@
 cron:
 - description: scrape the pirate bay
   url: /scrape
-  schedule: every 1 hour
-#  timezone: UCT
-#  target:
+  schedule: every 1 hours synchronized

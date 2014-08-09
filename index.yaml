@@ -80,6 +80,16 @@ indexes:
 - kind: main_torrent
   properties:
   - name: category_id
+  - name: leechers
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: seeders
+
+- kind: main_torrent
+  properties:
+  - name: category_id
   - name: seeders
     direction: desc
 
@@ -87,3 +97,47 @@ indexes:
   properties:
   - name: category_id
   - name: size
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: size
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: title
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: title
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: uploaded_at
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: uploaded_at
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: user
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: user
+    direction: desc
+
+- kind: main_usertorrent
+  properties:
+  - name: __key__
+    direction: desc
