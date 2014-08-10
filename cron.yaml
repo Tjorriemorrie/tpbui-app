@@ -1,4 +1,9 @@
 cron:
 - description: scrape the pirate bay
-  url: /scrape
+  url: /scrape/piratebay
   schedule: every 1 hours synchronized
+
+- description: scrape the imdb
+  url: /scrape/movies
+  schedule: every 1 hours synchronized
+

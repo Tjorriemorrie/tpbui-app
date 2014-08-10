@@ -1,5 +1,5 @@
 application: tpbgui
-version: 2
+version: 3
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -36,7 +36,7 @@ handlers:
 - url: /static/
   static_dir: static/
 
-- url: /scrape
+- url: /scrape/.*
   script: djangoappengine.main.application
   login: admin
 

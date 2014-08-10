@@ -50,6 +50,11 @@ class Torrent(models.Model):
     nfo = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # movies (optional)
+    rating = models.IntegerField(null=True, blank=True)
+    rated_at = models.DateTimeField(null=True, blank=True)
+    title_rating = models.CharField(max_length=255)
+    resolution = models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):
         return '{0}'.format(self.title)

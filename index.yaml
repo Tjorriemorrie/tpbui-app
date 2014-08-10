@@ -85,6 +85,17 @@ indexes:
 - kind: main_torrent
   properties:
   - name: category_id
+  - name: rating
+
+- kind: main_torrent
+  properties:
+  - name: category_id
+  - name: rating
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: category_id
   - name: seeders
 
 - kind: main_torrent

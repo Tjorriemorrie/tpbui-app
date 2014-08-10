@@ -36,3 +36,10 @@ def download(request, tpb_id):
     ut = UserTorrent.objects.create(user=request.user, torrent=torrent, category=torrent.category, categoryGroup=torrent.category.categoryGroup)
     ut.save()
     return HttpResponse(status=200)
+
+
+def scrapeMovies(request):
+    from main.scraper import Imdb
+    imdb = Imdb()
+    imdb.runMovies()
+    return HttpResponse(status=200)

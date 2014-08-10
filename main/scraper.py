@@ -3,6 +3,9 @@ import re
 import time
 import datetime
 import arrow
+import requests
+from bs4 import BeautifulSoup
+import string
 
 
 class Scraper():
@@ -49,7 +52,6 @@ class Scraper():
 
 
     def scrapeDetail(self, link):
-        import requests
         s = requests.Session()
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
@@ -60,7 +62,6 @@ class Scraper():
 
     def parseResultList(self, resultList):
         data = []
-        from bs4 import BeautifulSoup
         soup = BeautifulSoup(resultList)
         # print soup.prettify().encode('utf8')
         for link in soup.find_all('a', class_='detLink'):
@@ -105,3 +106,80 @@ class Scraper():
                 setattr(torrent, property, value)
             torrent.save()
 
+
+class Imdb():
+    # urlBase = 'http://www.metacritic.com/search/%s/%s/results?sort=relevancy'
+    urlSearch = r'http://www.imdb.com/find?q=%s&&s=tt&ref_=fn_tt_pop'
+
+    def runMovies(self):
+        # print 'runmovies'
+        category = Category.objects.get(code=207)
+        # print category
+        # print 'torrents'
+        torrents = category.torrent_set.all()
+        # print len(torrents)
+        for torrent in torrents:
+            if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-1):
+                continue
+
+            matches = re.match(r'(.*)\(?(194[5-9]|19[5-9]\d|200\d|201[0-9])', torrent.title)
+            title = matches.group(1).replace('(', '') + matches.group(2)
+            links = self.searchTitle(torrent.title)
+            rating = self.searchTitleRanking(links)
+
+            torrent.title_rating = title
+            if r'1080p' in torrent.title.lower():
+                torrent.resolution = 1080
+            elif r'720p' in torrent.title.lower():
+                torrent.resolution = 720
+            torrent.rating = int(float(rating)*10)
+            torrent.rated_at = arrow.utcnow().datetime
+            torrent.save()
+            time.sleep(1)
+
+
+    def searchTitle(self, title):
+        links = []
+        url = self.urlSearch % (title,)
+        s = requests.Session()
+        a = requests.adapters.HTTPAdapter(max_retries=3)
+        s.mount('http://', a)
+        headers = {
+            # 'X-Real-IP': '251.223.201.178',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'
+        }
+        res = s.get(url, timeout=10, headers=headers)
+        res.raise_for_status()
+        # print res.content
+
+        soup = BeautifulSoup(res.content)
+        rows = soup.find('table', class_='findList').find_all('tr')
+        for row in rows:
+            links.append(row.find('a')['href'])
+
+        return links
+
+
+    def searchTitleRanking(self, links):
+        for link in links:
+            url = r'http://www.imdb.com' + link
+            s = requests.Session()
+            a = requests.adapters.HTTPAdapter(max_retries=3)
+            s.mount('http://', a)
+            headers = {
+                # 'X-Real-IP': '251.223.201.178',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'
+            }
+            res = s.get(url, timeout=10, headers=headers)
+            res.raise_for_status()
+            # print res.content
+
+            soup = BeautifulSoup(res.content)
+            try:
+                rating = soup.find(class_=['star-box', 'giga-star']).find(class_=['titlePageSprite', 'star-box-giga-star']).text.strip()
+                return rating
+            except AttributeError:
+                continue
+            # print 'rating='
+            # print rating
+        return None

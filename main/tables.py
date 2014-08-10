@@ -10,9 +10,8 @@ class TorrentTable(tables.Table):
 
     class Meta:
         model = Torrent
-        # fields = ('tpb_id',)
+        fields = ('download', 'title', 'seeders', 'size', 'uploaded_at', 'user', 'files')
         sequence = ('download', 'title', 'seeders', '...', 'files')
-        exclude = ('id', 'tpb_id', 'leechers', 'category', 'img', 'magnet', 'nfo', 'created_at', 'updated_at',)
         # add class="paleblue" to <table> tag
         # attrs = {"class": "paleblue"}
 
