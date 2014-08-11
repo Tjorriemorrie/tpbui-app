@@ -120,22 +120,24 @@ class Imdb():
         # print len(torrents)
         for torrent in torrents:
             if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-1):
-                continue
+                # continue
+                pass
 
             matches = re.match(r'(.*)\(?(194[5-9]|19[5-9]\d|200\d|201[0-9])', torrent.title)
             title = matches.group(1).replace('(', '') + matches.group(2)
-            links = self.searchTitle(torrent.title)
-            rating = self.searchTitleRanking(links)
+            links = self.searchTitle(title)
+            rating, header = self.searchTitleRanking(links)
 
-            torrent.title_rating = title
             if r'1080p' in torrent.title.lower():
                 torrent.resolution = 1080
             elif r'720p' in torrent.title.lower():
                 torrent.resolution = 720
-            torrent.rating = int(float(rating)*10)
+            torrent.title_rating = header
+            torrent.rating = rating
             torrent.rated_at = arrow.utcnow().datetime
             torrent.save()
             time.sleep(1)
+            # break
 
 
     def searchTitle(self, title):
@@ -177,9 +179,11 @@ class Imdb():
             soup = BeautifulSoup(res.content)
             try:
                 rating = soup.find(class_=['star-box', 'giga-star']).find(class_=['titlePageSprite', 'star-box-giga-star']).text.strip()
-                return rating
+                header = soup.find('h1', class_='header').find('span', class_='itemprop').text.strip()
+                rating = int(float(rating)*10)
+                return [rating, header]
             except AttributeError:
                 continue
             # print 'rating='
             # print rating
-        return None
+        return [None, None]

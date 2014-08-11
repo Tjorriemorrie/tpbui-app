@@ -8,6 +8,7 @@
 		{{ category.name }}
 	</h1>
 
+	{% include 'main/slider.html' with category=category rows=table.rows only %}
 
 	{% render_table table 'table.html' %}
 

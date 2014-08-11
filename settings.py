@@ -5,7 +5,7 @@ from djangoappengine.settings_base import *
 
 import os
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.appspot.com']
 

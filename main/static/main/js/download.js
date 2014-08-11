@@ -1,5 +1,9 @@
 $('.download a').on('click', function(event) {
-    $(this).parents('tr').addClass('downloaded');
-    var tpb_id = $(this).data('id');
-    $.get('/download/' + tpb_id);
+    setDownload($(this).data('id'));
 });
+
+function setDownload(tpb_id) {
+    console.info(tpb_id);
+    $('table').find('[data-id=' + tpb_id + ']').parents('tr').addClass('downloaded');
+    $.get('/download/' + tpb_id);
+}

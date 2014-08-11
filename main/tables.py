@@ -24,7 +24,11 @@ class TorrentTable(tables.Table):
         return mark_safe(html)
 
     def render_title(self, value, record):
-        html = '<img src="%s" class="row-icon" />' % record.img
+        if record.rating:
+            html = r'<span class="rating">%s</span> ' % (record.rating,)
+        else:
+            html = r''
+        html += '<img src="%s" class="row-icon" />' % (record.img,)
         html += ' <a href="http://www.thepiratebay.se/torrent/%s" target="_newtab">%s</a>' % (record.tpb_id, value)
         return mark_safe(html)
 

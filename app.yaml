@@ -13,7 +13,9 @@ inbound_services:
 
 libraries:
 - name: django
-  version: latest
+  version: 1.5
+- name: numpy
+  version: 1.6.1
 
 handlers:
 - url: /_ah/queue/deferred

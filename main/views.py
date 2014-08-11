@@ -13,7 +13,6 @@ def home(request):
 
 def category(request, code):
     category = get_object_or_404(Category, code=code)
-    # uts = UserTorrent.objects.filter(user=request.user, )
     table = TorrentTable(category.torrent_set.all(), order_by=('-uploaded_at',))
     table.user = request.user
     RequestConfig(request).configure(table)
