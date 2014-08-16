@@ -55,6 +55,10 @@ class Torrent(models.Model):
     rated_at = models.DateTimeField(null=True, blank=True)
     title_rating = models.CharField(max_length=255)
     resolution = models.IntegerField(null=True, blank=True)
+    # series (optional)
+    series_title = models.CharField(max_length=45, null=True, blank=True)
+    series_season = models.IntegerField(null=True, blank=True)
+    series_episode = models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):
         return '{0}'.format(self.title)

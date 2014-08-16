@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 {% load render_table from django_tables2 %}
+{% load staticfiles %}
 
 {% block content %}
 	<h1 class="page-header">
@@ -8,10 +8,9 @@
 		{{ category.name }}
 	</h1>
 
-	{% include 'main/slider.html' with category=category rows=table.rows only %}
+	{% include 'main/slider.html' with category=category rows=table.page.object_list only %}
 
 	{% render_table table 'table.html' %}
-
 {% endblock %}
 
 {% block css %}

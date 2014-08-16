@@ -20,18 +20,16 @@ class Scraper():
 
 
     def run(self):
-        self.runDefault()
-
-
-    def runDefault(self):
         categoryGroup = CategoryGroup.objects.get(code=self.group)
         for category in categoryGroup.category_set.all():
             # category = Category.objects.get(code=207)
             # print 'category'
             # print category
-            self.runCategory(category)
-            # break
-            time.sleep(5)
+            pages = 3 if 200 < self.group < 300 else 1
+            for p in xrange(pages):
+                self.runCategory(category)
+                # break
+                time.sleep(5)
 
 
     def runCategory(self, category, page=0):
@@ -112,32 +110,34 @@ class Imdb():
     urlSearch = r'http://www.imdb.com/find?q=%s&&s=tt&ref_=fn_tt_pop'
 
     def runMovies(self):
-        # print 'runmovies'
-        category = Category.objects.get(code=207)
-        # print category
-        # print 'torrents'
-        torrents = category.torrent_set.all()
-        # print len(torrents)
-        for torrent in torrents:
-            if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-1):
-                # continue
-                pass
+        categories = [201, 207]
+        for code in categories:
+            # print 'runmovies'
+            category = Category.objects.get(code=code)
+            # print category
+            # print 'torrents'
+            torrents = category.torrent_set.all()
+            # print len(torrents)
+            for torrent in torrents:
+                if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-1):
+                    continue
+                    # pass
 
-            matches = re.match(r'(.*)\(?(194[5-9]|19[5-9]\d|200\d|201[0-9])', torrent.title)
-            title = matches.group(1).replace('(', '') + matches.group(2)
-            links = self.searchTitle(title)
-            rating, header = self.searchTitleRanking(links)
+                matches = re.match(r'(.*)\(?(194[5-9]|19[5-9]\d|200\d|201[0-9])', torrent.title)
+                title = matches.group(1).replace('(', '') + matches.group(2)
+                links = self.searchTitle(title)
+                rating, header = self.searchTitleRanking(links)
 
-            if r'1080p' in torrent.title.lower():
-                torrent.resolution = 1080
-            elif r'720p' in torrent.title.lower():
-                torrent.resolution = 720
-            torrent.title_rating = header
-            torrent.rating = rating
-            torrent.rated_at = arrow.utcnow().datetime
-            torrent.save()
-            time.sleep(1)
-            # break
+                if r'1080p' in torrent.title.lower():
+                    torrent.resolution = 1080
+                elif r'720p' in torrent.title.lower():
+                    torrent.resolution = 720
+                torrent.title_rating = header
+                torrent.rating = rating
+                torrent.rated_at = arrow.utcnow().datetime
+                torrent.save()
+                time.sleep(1)
+                # break
 
 
     def searchTitle(self, title):
@@ -187,3 +187,55 @@ class Imdb():
             # print 'rating='
             # print rating
         return [None, None]
+
+
+
+class SeriesScraper():
+    def __init__(self):
+        from google.appengine.api import urlfetch
+        urlfetch.set_default_fetch_deadline(60)
+
+
+    def run(self):
+        for code in [205, 208]:
+            category = Category.objects.get(code=code)
+            seriesTitles = self.extractSeriesTitles(category)
+            self.scrapeSeriesTitles(seriesTitles, category)
+
+
+    def extractSeriesTitles(self, category):
+        titles = set()
+        print 'category', category
+        for torrent in category.torrent_set.all(): #filter(series_title__isnull=True):
+            # print 'torrent', torrent
+            titleGroups = re.match(r'(.*)(s\d{1,2})(e\d{1,2})', torrent.title, re.I)
+            if titleGroups is not None:
+                titles.add(titleGroups.group(0))
+                torrent.series_title = titleGroups.group(1)
+                torrent.series_season = int(titleGroups.group(2)[2:])
+                torrent.series_episode = int(titleGroups.group(3)[2:])
+                torrent.save()
+        print 'series titles', titles
+        return titles
+
+
+    def scrapeSeriesTitles(self, seriesTitles, category):
+        s = requests.Session()
+        a = requests.adapters.HTTPAdapter(max_retries=3)
+        s.mount('http://', a)
+        for seriesTitle in seriesTitles:
+            res = s.get('http://www.thepiratebay.se/search/{0}/0/7/{1}'.format(seriesTitle, category.code), timeout=10)
+            res.raise_for_status()
+            scraper = Scraper()
+            data = scraper.parseResultList(res.content)
+            scraper.saveData(data, category)
+            time.sleep(1)
+
+
+    def saveData(self, data, category):
+        for item in data:
+            item['category'] = category
+            torrent, created = Torrent.objects.get_or_create(tpb_id=item['tpb_id'], defaults=item)
+            for property, value in item.iteritems():
+                setattr(torrent, property, value)
+            torrent.save()

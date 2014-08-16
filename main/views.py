@@ -15,12 +15,18 @@ def category(request, code):
     category = get_object_or_404(Category, code=code)
     table = TorrentTable(category.torrent_set.all(), order_by=('-uploaded_at',))
     table.user = request.user
-    RequestConfig(request).configure(table)
+    RequestConfig(request, paginate={'per_page': 20}).configure(table)
+
     context = {
         'category': category,
         'table': table,
     }
-    return render(request, 'main/category.html', context)
+
+    if category.code in [205, 208]:
+        view = 'main/series.html'
+    else:
+        view = 'main/category.html'
+    return render(request, view, context)
 
 
 def scrape(request):
@@ -41,4 +47,11 @@ def scrapeMovies(request):
     from main.scraper import Imdb
     imdb = Imdb()
     imdb.runMovies()
+    return HttpResponse(status=200)
+
+
+def scrapeSeries(request):
+    from main.scraper import SeriesScraper
+    seriesScraper = SeriesScraper()
+    seriesScraper.run()
     return HttpResponse(status=200)

@@ -148,6 +148,27 @@ indexes:
   - name: user
     direction: desc
 
+- kind: main_torrent
+  properties:
+  - name: series_title
+  - name: series_season
+    direction: desc
+  - name: series_episode
+    direction: desc
+  - name: seeders
+    direction: desc
+
+- kind: main_torrent
+  properties:
+  - name: series_title
+  - name: uploaded_at
+
+- kind: main_torrent
+  properties:
+  - name: series_title
+  - name: uploaded_at
+    direction: desc
+
 - kind: main_usertorrent
   properties:
   - name: __key__

@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^download/(?P<tpb_id>[0-9]+)$', views.download, name='download'),
     url(r'^scrape/piratebay$', views.scrape, name='scrape'),
     url(r'^scrape/movies', views.scrapeMovies, name='scrapeMovies'),
+    url(r'^scrape/series', views.scrapeSeries, name='scrapeSeries'),
 ]
