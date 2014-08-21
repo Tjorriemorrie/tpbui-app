@@ -6,6 +6,7 @@ import arrow
 import requests
 from bs4 import BeautifulSoup
 import string
+import logging
 
 
 class Scraper():
@@ -25,14 +26,15 @@ class Scraper():
             # category = Category.objects.get(code=207)
             # print 'category'
             # print category
-            pages = 3 if 200 < self.group < 300 else 1
+            pages = 3 if 200 <= self.group < 300 else 1
             for p in xrange(pages):
-                self.runCategory(category)
+                self.runCategory(category, p)
                 # break
                 time.sleep(5)
 
 
     def runCategory(self, category, page=0):
+        logging.info('runCategory', str(category), str(page))
         resultList = self.scrapeBrowse(category, page)
         # print html
         data = self.parseResultList(resultList)
@@ -44,7 +46,9 @@ class Scraper():
         s = requests.Session()
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
-        res = s.get(self.urlBase + '/browse/' + str(category.code) + '/' + str(page) + '/7', timeout=10)
+        link = self.urlBase + '/browse/' + str(category.code) + '/' + str(page) + '/7'
+        logging.info('scrapeBrowse', str(link))
+        res = s.get(link, timeout=10)
         res.raise_for_status()
         return res.content
 
@@ -53,6 +57,7 @@ class Scraper():
         s = requests.Session()
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
+        logging.info('scrapeDetail', str(link))
         res = s.get(link, timeout=10)
         res.raise_for_status()
         return res.content
@@ -200,7 +205,7 @@ class SeriesScraper():
         for code in [205, 208]:
             category = Category.objects.get(code=code)
             seriesTitles = self.extractSeriesTitles(category)
-            self.scrapeSeriesTitles(seriesTitles, category)
+            # self.scrapeSeriesTitles(seriesTitles, category)
 
 
     def extractSeriesTitles(self, category):
