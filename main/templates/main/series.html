@@ -29,7 +29,7 @@
 						{% for torrent in torrents %}
 						<tr class="{{ torrent.row_class }}">
 							<td class="download">
-								<a href="{{ torrent.magnet }}" data-id="{{ torrent.tpb_id }}"><span class="glyphicon glyphicon-download"></span></a>
+								<a href="{{ torrent.magnet }}" data-id="{{ torrent.tpb_id }}" target="_newtab"><span class="glyphicon glyphicon-download"></span></a>
 							</td>
 							<td>S{{ torrent.series_season|stringformat:'02i' }}</td>
 							<td>E{{ torrent.series_episode|stringformat:'02i' }}</td>

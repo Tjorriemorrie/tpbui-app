@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from main.models import *
 from main.tables import *
 from django_tables2 import RequestConfig
+import logging
 
 
 def home(request):
@@ -15,7 +16,7 @@ def category(request, code):
     category = get_object_or_404(Category, code=code)
     table = TorrentTable(category.torrent_set.all(), order_by=('-uploaded_at',))
     table.user = request.user
-    RequestConfig(request, paginate={'per_page': 20}).configure(table)
+    RequestConfig(request, paginate={'per_page': 30}).configure(table)
 
     context = {
         'category': category,
@@ -38,9 +39,10 @@ def scrape(request):
 
 def download(request, tpb_id):
     torrent = get_object_or_404(Torrent, tpb_id=tpb_id)
-    ut = UserTorrent.objects.create(user=request.user, torrent=torrent, category=torrent.category, categoryGroup=torrent.category.categoryGroup)
+    ut, created = UserTorrent.objects.get_or_create(user=request.user, torrent=torrent, category=torrent.category, categoryGroup=torrent.category.categoryGroup)
     ut.save()
-    return HttpResponse(status=200)
+    logging.info(str(request.user.username) + ' downloaded ' + str(tpb_id))
+    return HttpResponse(status=200, content="Saved " + str(tpb_id))
 
 
 def scrapeMovies(request):

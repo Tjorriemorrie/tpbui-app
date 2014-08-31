@@ -75,3 +75,9 @@ STATICFILES_FINDERS = (
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
+
+ALLOWED_HOSTS = [
+    '.appspot.com',
+    'localhost',
+    '127.0.0.1',
+]

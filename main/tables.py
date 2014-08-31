@@ -20,7 +20,7 @@ class TorrentTable(tables.Table):
         return 'downloaded' if ut else ''
 
     def render_download(self, record):
-        html = r'<a href="%s" data-id="%s"><span class="glyphicon glyphicon-download"></span></a>' % (record.magnet, record.tpb_id)
+        html = r'<a href="%s" data-id="%s" target="_newtab"><span class="glyphicon glyphicon-download"></span></a>' % (record.magnet, record.tpb_id)
         return mark_safe(html)
 
     def render_title(self, value, record):

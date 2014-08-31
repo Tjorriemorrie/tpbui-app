@@ -1,5 +1,6 @@
 $('.download a').on('click', function(event) {
     setDownload($(this).data('id'));
+    return true;
 });
 
 function setDownload(tpb_id) {

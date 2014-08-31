@@ -25,7 +25,7 @@ class SeriesNewNode(Node):
                 titles.add(userTorrent.torrent.series_title)
 
         # get latest new episodes for each title
-        weekAgo = arrow.utcnow().replace(days=-7)
+        weekAgo = arrow.utcnow().replace(days=-13)
         for title in titles:
             torrents = Torrent.objects.filter(uploaded_at__gte=weekAgo.datetime, series_title=title).order_by('-uploaded_at')
             if torrents:

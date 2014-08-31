@@ -7,11 +7,13 @@ import requests
 from bs4 import BeautifulSoup
 import string
 import logging
+from django.db.models import Q
 
 
 class Scraper():
     urlBase = 'http://thepiratebay.se'
     patternSize = re.compile(r'^.*?\([^\d]*(\d+)[^\d]*\).*$', re.U)
+    multiPages = [205, 207]
     group = None
 
     def __init__(self):
@@ -21,24 +23,21 @@ class Scraper():
 
 
     def run(self):
+        # self.group = 200
         categoryGroup = CategoryGroup.objects.get(code=self.group)
         for category in categoryGroup.category_set.all():
-            # category = Category.objects.get(code=207)
-            # print 'category'
-            # print category
-            pages = 3 if 200 <= self.group < 300 else 1
-            for p in xrange(pages):
+            pages = 3 if category.code in self.multiPages else 1
+            for p in xrange(0, pages):
                 self.runCategory(category, p)
                 # break
-                time.sleep(5)
+                time.sleep(1)
 
 
     def runCategory(self, category, page=0):
-        logging.info('runCategory', str(category), str(page))
+        logging.info('>>>>> runCategory >>> ' + str(category) + ' :: ' + str(page))
         resultList = self.scrapeBrowse(category, page)
         # print html
-        data = self.parseResultList(resultList)
-        self.saveData(data, category)
+        self.parseResultList(resultList, category)
 
 
     def scrapeBrowse(self, category, page):
@@ -47,7 +46,7 @@ class Scraper():
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
         link = self.urlBase + '/browse/' + str(category.code) + '/' + str(page) + '/7'
-        logging.info('scrapeBrowse', str(link))
+        logging.info('>>> scrapeBrowse >>> ' + str(link))
         res = s.get(link, timeout=10)
         res.raise_for_status()
         return res.content
@@ -57,14 +56,13 @@ class Scraper():
         s = requests.Session()
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
-        logging.info('scrapeDetail', str(link))
+        # logging.info('>>> scrapeDetail >>> ' + str(link))
         res = s.get(link, timeout=10)
         res.raise_for_status()
         return res.content
 
 
-    def parseResultList(self, resultList):
-        data = []
+    def parseResultList(self, resultList, category):
         soup = BeautifulSoup(resultList)
         # print soup.prettify().encode('utf8')
         for link in soup.find_all('a', class_='detLink'):
@@ -93,12 +91,12 @@ class Scraper():
             else:
                 item['img'] = 'http://www.thepiratebay.se/static/img/tpblogo_sm_ny.gif'
 
-            data.append(item)
+            self.saveData([item], category)
+
             # print 'item'
             # print item
             # break
-            time.sleep(1)
-        return data
+            time.sleep(0.100)
 
 
     def saveData(self, data, category):
@@ -108,6 +106,7 @@ class Scraper():
             for property, value in item.iteritems():
                 setattr(torrent, property, value)
             torrent.save()
+            # logging.info('>>>> saving >>>> ' + str(torrent.tpb_id))
 
 
 class Imdb():
@@ -129,20 +128,23 @@ class Imdb():
                     # pass
 
                 matches = re.match(r'(.*)\(?(194[5-9]|19[5-9]\d|200\d|201[0-9])', torrent.title)
-                title = matches.group(1).replace('(', '') + matches.group(2)
-                links = self.searchTitle(title)
-                rating, header = self.searchTitleRanking(links)
+                if matches is None:
+                    logging.info('No match for ' + torrent.title)
+                else:
+                    title = matches.group(1).replace('(', '') + matches.group(2)
+                    links = self.searchTitle(title)
+                    rating, header = self.searchTitleRanking(links)
 
-                if r'1080p' in torrent.title.lower():
-                    torrent.resolution = 1080
-                elif r'720p' in torrent.title.lower():
-                    torrent.resolution = 720
-                torrent.title_rating = header
-                torrent.rating = rating
-                torrent.rated_at = arrow.utcnow().datetime
-                torrent.save()
-                time.sleep(1)
-                # break
+                    if r'1080p' in torrent.title.lower():
+                        torrent.resolution = 1080
+                    elif r'720p' in torrent.title.lower():
+                        torrent.resolution = 720
+                    torrent.title_rating = header
+                    torrent.rating = rating
+                    torrent.rated_at = arrow.utcnow().datetime
+                    torrent.save()
+                    time.sleep(0.1)
+                    # break
 
 
     def searchTitle(self, title):
@@ -210,17 +212,17 @@ class SeriesScraper():
 
     def extractSeriesTitles(self, category):
         titles = set()
-        print 'category', category
+        logging.debug('category', category)
         for torrent in category.torrent_set.all(): #filter(series_title__isnull=True):
             # print 'torrent', torrent
             titleGroups = re.match(r'(.*)(s\d{1,2})(e\d{1,2})', torrent.title, re.I)
             if titleGroups is not None:
                 titles.add(titleGroups.group(0))
-                torrent.series_title = titleGroups.group(1)
+                torrent.series_title = titleGroups.group(1).replace('.', ' ').strip()
                 torrent.series_season = int(titleGroups.group(2)[2:])
                 torrent.series_episode = int(titleGroups.group(3)[2:])
                 torrent.save()
-        print 'series titles', titles
+        logging.debug('series titles', titles)
         return titles
 
 
