@@ -14,7 +14,7 @@ class SliderMoviesNode(Node):
 
     def render(self, context):
         self.rows = self.rows.resolve(context)
-        movies = [row.record for row in self.rows if row.record.title_rating]
+        movies = [row.record for row in self.rows if row.record.title_rating and row.user == 'YIFY']
         # print movies
         movies = sorted(movies, key=lambda movie: movie.resolution, reverse=True)
         movies = sorted(movies, key=lambda movie: movie.seeders, reverse=True)

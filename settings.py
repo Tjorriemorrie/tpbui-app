@@ -7,7 +7,10 @@ import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['.appspot.com']
+ALLOWED_HOSTS = [
+    '.appspot.com',
+    '127.0.0.1',
+]
 
 # Activate django-dbindexer for the default database
 DATABASES['native'] = DATABASES['default']
@@ -75,9 +78,3 @@ STATICFILES_FINDERS = (
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
-
-ALLOWED_HOSTS = [
-    '.appspot.com',
-    'localhost',
-    '127.0.0.1',
-]

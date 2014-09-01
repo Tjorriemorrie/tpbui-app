@@ -1,0 +1,14 @@
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] Logging to bulkloader-log-20140901.123959
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] Throttling transfers:
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-09-01 12:39:59,102 bulkloader.py] Batch Size: 10
+[INFO     2014-09-01 12:39:59,103 bulkloader.py] Opening database: bulkloader-progress-20140901.123959.sql3
+[DEBUG    2014-09-01 12:39:59,107 bulkloader.py] [Thread-1] RestoreThread: started
+[DEBUG    2014-09-01 12:40:04,593 bulkloader.py] [Thread-2] RestoreThread: started
+[DEBUG    2014-09-01 12:40:04,593 bulkloader.py] [Thread-1] RestoreThread: exiting
+[DEBUG    2014-09-01 12:40:04,593 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2014-09-01 12:40:04,593 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = 127.0.0.1:8000
+[DEBUG    2014-09-01 12:40:04,600 bulkloader.py] Bulkloader using app_id: dev~tpbgui
+[INFO     2014-09-01 12:40:04,600 bulkloader.py] Connecting to 127.0.0.1:8000/_ah/remote_api

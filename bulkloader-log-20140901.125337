@@ -1,0 +1,81 @@
+[INFO     2014-09-01 12:53:37,301 bulkloader.py] Logging to bulkloader-log-20140901.125337
+[INFO     2014-09-01 12:53:37,301 bulkloader.py] Throttling transfers:
+[INFO     2014-09-01 12:53:37,301 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-09-01 12:53:37,302 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-09-01 12:53:37,302 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-09-01 12:53:37,302 bulkloader.py] Batch Size: 10
+[INFO     2014-09-01 12:53:37,334 bulkloader.py] Opening database: bulkloader-progress-20140901.125337.sql3
+[INFO     2014-09-01 12:53:37,338 bulkloader.py] Opening database: bulkloader-results-20140901.125337.sql3
+[DEBUG    2014-09-01 12:53:37,342 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,342 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,343 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,343 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,343 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,344 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,344 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,344 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,345 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,345 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: started
+[DEBUG    2014-09-01 12:53:37,345 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = tpbgui.appspot.com
+[DEBUG    2014-09-01 12:53:37,353 bulkloader.py] Bulkloader using app_id: tpbgui
+[INFO     2014-09-01 12:53:37,353 bulkloader.py] Connecting to tpbgui.appspot.com/_ah/remote_api
+[DEBUG    2014-09-01 12:53:39,874 bulkloader.py] [Thread-11] ExportProgressThread: started
+[DEBUG    2014-09-01 12:53:39,874 bulkloader.py] [Thread-12] DataSourceThread: started
+[INFO     2014-09-01 12:53:39,874 bulkloader.py] Downloading kinds: ['__Stat_PropertyType_PropertyName_Kind__']
+[DEBUG    2014-09-01 12:53:39,880 bulkloader.py] [Thread-12] DataSourceThread: exiting
+[DEBUG    2014-09-01 12:53:39,883 bulkloader.py] Waiting for worker threads to finish...
+[DEBUG    2014-09-01 12:53:39,922 adaptive_thread_pool.py] [WorkerThread-0] Got work item __Stat_PropertyType_PropertyName_Kind__-ASC[None to None]
+[ERROR    2014-09-01 12:53:40,471 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread:
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/adaptive_thread_pool.py", line 171, in WorkOnItems
+    status, instruction = item.PerformWork(self.__thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1474, in _QueryForPbs
+    raise datastore._ToDatastoreError(e)
+BadRequestError: app s~tpbgui cannot access app tpbgui's data
+[DEBUG    2014-09-01 12:53:40,475 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: exiting
+[INFO     2014-09-01 12:53:40,475 adaptive_thread_pool.py] [WorkerThread-3] Backing off due to errors: 1.0 seconds
+[INFO     2014-09-01 12:53:40,885 bulkloader.py] An error occurred. Shutting down...
+[DEBUG    2014-09-01 12:53:40,886 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,887 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,887 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,887 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,887 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,887 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,888 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,888 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,889 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,889 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,889 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,889 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,977 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: exiting
+[DEBUG    2014-09-01 12:53:40,977 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[ERROR    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Error in WorkerThread-0: app s~tpbgui cannot access app tpbgui's data
+[DEBUG    2014-09-01 12:53:40,978 adaptive_thread_pool.py] Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/adaptive_thread_pool.py", line 171, in WorkOnItems
+    status, instruction = item.PerformWork(self.__thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1474, in _QueryForPbs
+    raise datastore._ToDatastoreError(e)
+BadRequestError: app s~tpbgui cannot access app tpbgui's data
+
+[DEBUG    2014-09-01 12:53:40,979 bulkloader.py] Waiting for progress_thread to terminate...
+[DEBUG    2014-09-01 12:53:40,994 bulkloader.py] [Thread-11] ExportProgressThread: exiting
+[DEBUG    2014-09-01 12:53:40,996 bulkloader.py] ... done.
+[INFO     2014-09-01 12:53:40,997 bulkloader.py] Have 0 entities, 0 previously transferred
+[INFO     2014-09-01 12:53:40,997 bulkloader.py] 0 entities (1735 bytes) transferred in 3.7 seconds

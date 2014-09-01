@@ -1,0 +1,556 @@
+[INFO     2014-09-01 12:04:36,354 bulkloader.py] Logging to bulkloader-log-20140901.120436
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] Throttling transfers:
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] Batch Size: 10
+[INFO     2014-09-01 12:04:36,355 bulkloader.py] Opening database: bulkloader-progress-20140901.120436.sql3
+[INFO     2014-09-01 12:04:36,361 bulkloader.py] Opening database: bulkloader-results-20140901.120436.sql3
+[DEBUG    2014-09-01 12:04:36,365 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,365 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,366 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,366 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,366 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,367 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,367 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,367 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,368 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,368 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = tpbgui.appspot.com
+[DEBUG    2014-09-01 12:04:36,369 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: started
+[DEBUG    2014-09-01 12:04:36,375 bulkloader.py] Bulkloader using app_id: s~tpbgui
+[INFO     2014-09-01 12:04:36,375 bulkloader.py] Connecting to tpbgui.appspot.com/_ah/remote_api
+[DEBUG    2014-09-01 12:04:38,392 bulkloader.py] [Thread-11] ExportProgressThread: started
+[DEBUG    2014-09-01 12:04:38,392 bulkloader.py] [Thread-12] DataSourceThread: started
+[INFO     2014-09-01 12:04:38,392 bulkloader.py] Downloading kinds: [u'django_admin_log', u'django_content_type', u'django_session', u'main_category', u'main_categorygroup', u'main_usertorrent', u'main_torrent', u'auth_user']
+[DEBUG    2014-09-01 12:04:38,408 adaptive_thread_pool.py] [WorkerThread-0] Got work item django_admin_log-ASC[None to None]
+[DEBUG    2014-09-01 12:04:38,411 bulkloader.py] [Thread-12] DataSourceThread: exiting
+[DEBUG    2014-09-01 12:04:38,425 bulkloader.py] Waiting for worker threads to finish...
+[DEBUG    2014-09-01 12:04:38,936 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.005
+[DEBUG    2014-09-01 12:04:38,936 bulkloader.py] Entities transferred total: 10
+[DEBUG    2014-09-01 12:04:38,938 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:38,942 bulkloader.py] [WorkerThread-0] django_admin_log-ASC[None to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:38,942 adaptive_thread_pool.py] Increasing active thread count to 2
+[DEBUG    2014-09-01 12:04:38,942 adaptive_thread_pool.py] [WorkerThread-0] Got work item django_content_type-ASC[None to None]
+[DEBUG    2014-09-01 12:04:38,943 adaptive_thread_pool.py] [WorkerThread-4] Got work item django_session-ASC[None to None]
+[DEBUG    2014-09-01 12:04:39,468 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.001
+[DEBUG    2014-09-01 12:04:39,469 bulkloader.py] Entities transferred total: 13
+[DEBUG    2014-09-01 12:04:39,471 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:39,472 bulkloader.py] [WorkerThread-0] django_content_type-ASC[None to None] Transferred 3 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:39,473 adaptive_thread_pool.py] Increasing active thread count to 3
+[DEBUG    2014-09-01 12:04:39,473 adaptive_thread_pool.py] [WorkerThread-0] Got work item main_category-ASC[None to None]
+[DEBUG    2014-09-01 12:04:39,474 adaptive_thread_pool.py] [WorkerThread-5] Got work item main_categorygroup-ASC[None to None]
+[DEBUG    2014-09-01 12:04:39,474 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.002
+[DEBUG    2014-09-01 12:04:39,474 bulkloader.py] Entities transferred total: 15
+[DEBUG    2014-09-01 12:04:39,475 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:39,476 bulkloader.py] [WorkerThread-4] django_session-ASC[None to None] Transferred 2 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:39,476 adaptive_thread_pool.py] Increasing active thread count to 4
+[DEBUG    2014-09-01 12:04:39,476 adaptive_thread_pool.py] [WorkerThread-4] Got work item main_usertorrent-ASC[None to None]
+[DEBUG    2014-09-01 12:04:39,477 adaptive_thread_pool.py] [WorkerThread-8] Got work item main_torrent-ASC[None to None]
+[DEBUG    2014-09-01 12:04:40,013 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.003
+[DEBUG    2014-09-01 12:04:40,013 bulkloader.py] Entities transferred total: 21
+[DEBUG    2014-09-01 12:04:40,016 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,017 bulkloader.py] [WorkerThread-5] main_categorygroup-ASC[None to None] Transferred 6 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,018 adaptive_thread_pool.py] Increasing active thread count to 5
+[DEBUG    2014-09-01 12:04:40,018 adaptive_thread_pool.py] [WorkerThread-5] Got work item auth_user-ASC[None to None]
+[DEBUG    2014-09-01 12:04:40,018 adaptive_thread_pool.py] [WorkerThread-9] Got work item django_admin_log-DESC(datastore_types.Key.from_path(u'django_admin_log', 4896606314823680L, _app=u's~tpbgui') to None]
+[DEBUG    2014-09-01 12:04:40,022 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.005
+[DEBUG    2014-09-01 12:04:40,022 bulkloader.py] Entities transferred total: 31
+[DEBUG    2014-09-01 12:04:40,023 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,027 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.003
+[DEBUG    2014-09-01 12:04:40,027 bulkloader.py] Entities transferred total: 41
+[DEBUG    2014-09-01 12:04:40,028 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,037 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.007
+[DEBUG    2014-09-01 12:04:40,037 bulkloader.py] Entities transferred total: 51
+[DEBUG    2014-09-01 12:04:40,038 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,044 bulkloader.py] [WorkerThread-4] main_usertorrent-ASC[None to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,044 adaptive_thread_pool.py] Increasing active thread count to 6
+[DEBUG    2014-09-01 12:04:40,045 adaptive_thread_pool.py] [WorkerThread-2] Got work item main_usertorrent-DESC(datastore_types.Key.from_path(u'main_usertorrent', 5240769828880384L, _app=u's~tpbgui') to None]
+[DEBUG    2014-09-01 12:04:40,046 bulkloader.py] [WorkerThread-0] main_category-ASC[None to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,046 adaptive_thread_pool.py] Increasing active thread count to 7
+[DEBUG    2014-09-01 12:04:40,046 adaptive_thread_pool.py] [WorkerThread-0] Got work item main_category-DESC(datastore_types.Key.from_path(u'main_category', 4838192612114432L, _app=u's~tpbgui') to None]
+[DEBUG    2014-09-01 12:04:40,048 bulkloader.py] [WorkerThread-8] main_torrent-ASC[None to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,048 adaptive_thread_pool.py] Increasing active thread count to 8
+[DEBUG    2014-09-01 12:04:40,049 adaptive_thread_pool.py] [WorkerThread-8] Got work item main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 4514695675379712L, _app=u's~tpbgui') to None]
+[DEBUG    2014-09-01 12:04:40,580 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.003
+[DEBUG    2014-09-01 12:04:40,580 bulkloader.py] Entities transferred total: 61
+[DEBUG    2014-09-01 12:04:40,582 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,592 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.009
+[DEBUG    2014-09-01 12:04:40,592 bulkloader.py] Entities transferred total: 71
+[DEBUG    2014-09-01 12:04:40,593 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:40,597 bulkloader.py] [WorkerThread-0] main_category-DESC(datastore_types.Key.from_path(u'main_category', 4838192612114432L, _app=u's~tpbgui') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,598 adaptive_thread_pool.py] Increasing active thread count to 9
+[DEBUG    2014-09-01 12:04:40,598 adaptive_thread_pool.py] [WorkerThread-0] Got work item main_category-DESC[datastore_types.Key.from_path(u'main_category', 4838192612114432L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 5386990782513152L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:40,598 adaptive_thread_pool.py] [WorkerThread-7] Got work item main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 4514695675379712L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5630301216702464L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:40,599 bulkloader.py] [WorkerThread-8] main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 4514695675379712L, _app=u's~tpbgui') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:40,600 adaptive_thread_pool.py] Increasing active thread count to 10
+[DEBUG    2014-09-01 12:04:40,600 adaptive_thread_pool.py] [WorkerThread-8] Got work item main_category-ASC(datastore_types.Key.from_path(u'main_category', 5386990782513152L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 5935788952911872L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:40,601 adaptive_thread_pool.py] [WorkerThread-3] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5630301216702464L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6745906758025216L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:41,140 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.003
+[DEBUG    2014-09-01 12:04:41,140 bulkloader.py] Entities transferred total: 81
+[DEBUG    2014-09-01 12:04:41,142 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:41,148 bulkloader.py] [WorkerThread-0] main_category-DESC[datastore_types.Key.from_path(u'main_category', 4838192612114432L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 5386990782513152L, _app=u's~tpbgui')] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:41,149 adaptive_thread_pool.py] [WorkerThread-0] Got work item main_category-DESC[datastore_types.Key.from_path(u'main_category', 4838192612114432L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 4983852401426432L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:41,156 adaptive_thread_pool.py] [WorkerThread-4] Got work item main_category-ASC(datastore_types.Key.from_path(u'main_category', 4983852401426432L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 5129512190738432L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:41,185 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.007
+[DEBUG    2014-09-01 12:04:41,185 bulkloader.py] Entities transferred total: 91
+[DEBUG    2014-09-01 12:04:41,186 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:41,192 bulkloader.py] [WorkerThread-3] main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5630301216702464L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6745906758025216L, _app=u's~tpbgui')) Transferred 10 entities in 0.6 seconds
+[DEBUG    2014-09-01 12:04:41,193 adaptive_thread_pool.py] [WorkerThread-3] Got work item main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6190189663748096L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:41,194 adaptive_thread_pool.py] [WorkerThread-6] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 6190189663748096L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6745906758025216L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:41,875 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.000
+[DEBUG    2014-09-01 12:04:41,876 bulkloader.py] Entities transferred total: 91
+[DEBUG    2014-09-01 12:04:41,876 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:41,899 bulkloader.py] [WorkerThread-4] main_category-ASC(datastore_types.Key.from_path(u'main_category', 4983852401426432L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_category', 5129512190738432L, _app=u's~tpbgui')) Transferred 0 entities in 0.7 seconds
+[DEBUG    2014-09-01 12:04:41,909 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.011
+[DEBUG    2014-09-01 12:04:41,910 bulkloader.py] Entities transferred total: 101
+[DEBUG    2014-09-01 12:04:41,911 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:41,917 bulkloader.py] [WorkerThread-3] main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6190189663748096L, _app=u's~tpbgui')] Transferred 10 entities in 0.7 seconds
+[DEBUG    2014-09-01 12:04:41,918 adaptive_thread_pool.py] [WorkerThread-3] Got work item main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5907543368925184L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:41,918 adaptive_thread_pool.py] [WorkerThread-4] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5907543368925184L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 6180614168379392L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:42,509 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.009
+[DEBUG    2014-09-01 12:04:42,509 bulkloader.py] Entities transferred total: 111
+[DEBUG    2014-09-01 12:04:42,511 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:42,517 bulkloader.py] [WorkerThread-3] main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5907543368925184L, _app=u's~tpbgui')] Transferred 10 entities in 0.6 seconds
+[DEBUG    2014-09-01 12:04:42,518 adaptive_thread_pool.py] [WorkerThread-3] Got work item main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5767195246198784L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:42,523 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5767195246198784L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5899917922926592L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:43,058 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.007
+[DEBUG    2014-09-01 12:04:43,058 bulkloader.py] Entities transferred total: 121
+[DEBUG    2014-09-01 12:04:43,060 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:43,072 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.011
+[DEBUG    2014-09-01 12:04:43,072 bulkloader.py] Entities transferred total: 131
+[DEBUG    2014-09-01 12:04:43,073 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:43,078 bulkloader.py] [WorkerThread-3] main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5767195246198784L, _app=u's~tpbgui')] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:43,079 adaptive_thread_pool.py] [WorkerThread-3] Got work item main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5634472569470976L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5698360073781248L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:43,080 bulkloader.py] [WorkerThread-1] main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5767195246198784L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5899917922926592L, _app=u's~tpbgui')) Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:43,081 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 5771716101931008L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5835817012428800L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:43,920 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.010
+[DEBUG    2014-09-01 12:04:43,920 bulkloader.py] Entities transferred total: 141
+[DEBUG    2014-09-01 12:04:43,923 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:43,928 bulkloader.py] [WorkerThread-1] main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 5771716101931008L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5835817012428800L, _app=u's~tpbgui')] Transferred 10 entities in 0.8 seconds
+[DEBUG    2014-09-01 12:04:43,929 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5698360073781248L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5762247578091520L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:44,512 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.006
+[DEBUG    2014-09-01 12:04:44,512 bulkloader.py] Entities transferred total: 151
+[DEBUG    2014-09-01 12:04:44,515 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:44,520 bulkloader.py] [WorkerThread-1] main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5698360073781248L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5762247578091520L, _app=u's~tpbgui')) Transferred 10 entities in 0.6 seconds
+[DEBUG    2014-09-01 12:04:44,521 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5835817012428800L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5899917922926592L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:45,052 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.006
+[DEBUG    2014-09-01 12:04:45,052 bulkloader.py] Entities transferred total: 161
+[DEBUG    2014-09-01 12:04:45,054 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:45,060 bulkloader.py] [WorkerThread-1] main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5835817012428800L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5899917922926592L, _app=u's~tpbgui')] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:45,061 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5771716101931008L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5801188503060480L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:04:45,599 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.006
+[DEBUG    2014-09-01 12:04:45,599 bulkloader.py] Entities transferred total: 171
+[DEBUG    2014-09-01 12:04:45,602 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:45,607 bulkloader.py] [WorkerThread-1] main_torrent-DESC[datastore_types.Key.from_path(u'main_torrent', 5771716101931008L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5801188503060480L, _app=u's~tpbgui')] Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:45,608 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5801188503060480L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5830660904189952L, _app=u's~tpbgui'))
+[DEBUG    2014-09-01 12:04:46,139 bulkloader.py] bulkloader-results-20140901.120436.sql3 insert: delta=0.006
+[DEBUG    2014-09-01 12:04:46,139 bulkloader.py] Entities transferred total: 181
+[DEBUG    2014-09-01 12:04:46,142 bulkloader.py] delete: delta=0.000
+[DEBUG    2014-09-01 12:04:46,147 bulkloader.py] [WorkerThread-1] main_torrent-ASC(datastore_types.Key.from_path(u'main_torrent', 5801188503060480L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5830660904189952L, _app=u's~tpbgui')) Transferred 10 entities in 0.5 seconds
+[DEBUG    2014-09-01 12:04:46,148 adaptive_thread_pool.py] [WorkerThread-1] Got work item main_torrent-DESC(datastore_types.Key.from_path(u'main_torrent', 5701751084679168L, _app=u's~tpbgui') to datastore_types.Key.from_path(u'main_torrent', 5731999331385344L, _app=u's~tpbgui')]
+[DEBUG    2014-09-01 12:05:46,029 bulkloader.py] Queue join interrupted
+[INFO     2014-09-01 12:05:46,029 bulkloader.py] An error occurred. Shutting down...
+[DEBUG    2014-09-01 12:05:46,030 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[ERROR    2014-09-01 12:05:55,880 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[ERROR    2014-09-01 12:05:55,881 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[ERROR    2014-09-01 12:05:55,881 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:05:55,934 adaptive_thread_pool.py] Decreasing the number of active threads to 9
+[DEBUG    2014-09-01 12:05:55,934 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: exiting
+[DEBUG    2014-09-01 12:05:55,935 adaptive_thread_pool.py] Decreasing the number of active threads to 8
+[DEBUG    2014-09-01 12:05:55,935 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: exiting
+[DEBUG    2014-09-01 12:05:55,936 adaptive_thread_pool.py] Decreasing the number of active threads to 7
+[DEBUG    2014-09-01 12:05:55,936 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: exiting
+[ERROR    2014-09-01 12:05:56,381 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[ERROR    2014-09-01 12:05:56,381 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:05:56,410 adaptive_thread_pool.py] Decreasing the number of active threads to 6
+[DEBUG    2014-09-01 12:05:56,411 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: exiting
+[DEBUG    2014-09-01 12:05:56,412 adaptive_thread_pool.py] Decreasing the number of active threads to 5
+[DEBUG    2014-09-01 12:05:56,412 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: exiting
+[ERROR    2014-09-01 12:05:56,881 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[ERROR    2014-09-01 12:05:56,881 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:05:56,886 adaptive_thread_pool.py] Decreasing the number of active threads to 4
+[DEBUG    2014-09-01 12:05:56,886 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: exiting
+[DEBUG    2014-09-01 12:05:56,887 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:05:56,887 adaptive_thread_pool.py] Decreasing the number of active threads to 3
+[DEBUG    2014-09-01 12:05:56,887 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: exiting
+[ERROR    2014-09-01 12:05:57,382 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:05:57,413 adaptive_thread_pool.py] Decreasing the number of active threads to 2
+[DEBUG    2014-09-01 12:05:57,413 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: exiting
+[ERROR    2014-09-01 12:05:58,661 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:05:58,685 adaptive_thread_pool.py] Decreasing the number of active threads to 1
+[DEBUG    2014-09-01 12:05:58,685 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: exiting
+[ERROR    2014-09-01 12:06:01,431 bulkloader.py] Retrying on non-fatal URL error: [Errno 65] No route to host
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 753, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1159, in _TransferItem
+    self, retry_parallel=self.first)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1503, in GetEntities
+    results = self._QueryForPbs(query)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1460, in _QueryForPbs
+    result_pb)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 94, in MakeSyncCall
+    return stubmap.MakeSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 328, in MakeSyncCall
+    rpc.CheckSuccess()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/api/apiproxy_rpc.py", line 156, in _WaitImpl
+    self.request, self.response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 285, in MakeSyncCall
+    handler(request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 317, in _Dynamic_RunQuery
+    'datastore_v3', 'RunQuery', query, query_result)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 200, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 226, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 404, in open
+    response = self._open(req, data)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 422, in _open
+    '_open', req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1214, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1184, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 65] No route to host>
+[DEBUG    2014-09-01 12:06:01,469 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: exiting
+[DEBUG    2014-09-01 12:06:01,469 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,469 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,469 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,469 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,470 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,470 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,470 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,470 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2014-09-01 12:06:01,470 bulkloader.py] Waiting for progress_thread to terminate...
+[DEBUG    2014-09-01 12:06:01,470 bulkloader.py] [Thread-11] ExportProgressThread: exiting
+[DEBUG    2014-09-01 12:06:01,472 bulkloader.py] ... done.
+[INFO     2014-09-01 12:06:01,472 bulkloader.py] Have 181 entities, 0 previously transferred
+[INFO     2014-09-01 12:06:01,473 bulkloader.py] 181 entities (269844 bytes) transferred in 85.1 seconds

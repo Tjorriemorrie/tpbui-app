@@ -1,0 +1,37 @@
+[INFO     2014-09-01 13:20:47,938 bulkloader.py] Logging to bulkloader-log-20140901.132047
+[INFO     2014-09-01 13:20:47,938 bulkloader.py] Throttling transfers:
+[INFO     2014-09-01 13:20:47,938 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-09-01 13:20:47,938 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-09-01 13:20:47,938 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-09-01 13:20:47,939 bulkloader.py] Batch Size: 10
+[INFO     2014-09-01 13:20:47,940 bulkloader.py] Opening database: bulkloader
+[ERROR    2014-09-01 13:20:47,940 bulkloader.py] Database signature mismatch:
+
+Found:
+
+  app_id: dev~tpbgui
+  url: http://127.0.0.1:8000/_ah/remote_api
+  kind: None
+  download: False
+  map: False
+  dump: False
+  restore: True
+  progress_db: bulkloader
+  has_header: False
+  
+  
+
+Expecting:
+
+  app_id: dev~tpbgui
+  url: http://localhost:8000/_ah/remote_api
+  kind: None
+  download: False
+  map: False
+  dump: False
+  restore: True
+  progress_db: bulkloader
+  has_header: False
+  
+  
+

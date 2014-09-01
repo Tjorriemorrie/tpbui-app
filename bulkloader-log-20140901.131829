@@ -1,0 +1,36 @@
+[INFO     2014-09-01 13:18:29,691 bulkloader.py] Logging to bulkloader-log-20140901.131829
+[INFO     2014-09-01 13:18:29,691 bulkloader.py] Throttling transfers:
+[INFO     2014-09-01 13:18:29,691 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2014-09-01 13:18:29,691 bulkloader.py] HTTP connections: 8/second
+[INFO     2014-09-01 13:18:29,692 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2014-09-01 13:18:29,692 bulkloader.py] Batch Size: 10
+[INFO     2014-09-01 13:18:29,693 bulkloader.py] Opening database: bulkloader
+[DEBUG    2014-09-01 13:18:29,694 bulkloader.py] [Thread-1] RestoreThread: started
+[DEBUG    2014-09-01 13:18:35,897 bulkloader.py] [Thread-2] RestoreThread: started
+[DEBUG    2014-09-01 13:18:35,898 bulkloader.py] [Thread-1] RestoreThread: exiting
+[DEBUG    2014-09-01 13:18:35,898 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = 127.0.0.1:8000
+[DEBUG    2014-09-01 13:18:35,898 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2014-09-01 13:18:35,905 bulkloader.py] Bulkloader using app_id: dev~tpbgui
+[INFO     2014-09-01 13:18:35,905 bulkloader.py] Connecting to 127.0.0.1:8000/_ah/remote_api
+[ERROR    2014-09-01 13:18:35,978 bulkloader.py] Exception during authentication
+Traceback (most recent call last):
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 3466, in Run
+    self.request_manager.Authenticate()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/bulkloader.py", line 1329, in Authenticate
+    remote_api_stub.MaybeInvokeAuthentication()
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 740, in MaybeInvokeAuthentication
+    datastore_stub._server.Send(datastore_stub._path, payload=None)
+  File "/Users/jaco/google-cloud-sdk/platform/google_appengine/google/appengine/tools/appengine_rpc.py", line 405, in Send
+    f = self.opener.open(req)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 410, in open
+    response = meth(req, response)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 523, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 448, in error
+    return self._call_chain(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 382, in _call_chain
+    result = func(*args)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 531, in http_error_default
+    raise HTTPError(req.get_full_url(), code, msg, hdrs, fp)
+HTTPError: HTTP Error 500: Fatal error when loading application configuration
+[ERROR    2014-09-01 13:18:35,985 bulkloader.py] Authentication Failed: Incorrect credentials or unsupported authentication type (e.g. OpenId).
