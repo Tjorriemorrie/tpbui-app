@@ -26,7 +26,7 @@ class Scraper():
         # self.group = 200
         categoryGroup = CategoryGroup.objects.get(code=self.group)
         for category in categoryGroup.category_set.all():
-            pages = 3 if category.code in self.multiPages else 1
+            pages = 5 if category.code in self.multiPages else 1
             for p in xrange(0, pages):
                 self.runCategory(category, p)
                 # break
@@ -123,7 +123,7 @@ class Imdb():
             torrents = category.torrent_set.all()
             # print len(torrents)
             for torrent in torrents:
-                if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-1):
+                if torrent.rated_at and arrow.get(torrent.rated_at) >= arrow.utcnow().replace(weeks=-2):
                     continue
                     # pass
 
@@ -134,6 +134,8 @@ class Imdb():
                     title = matches.group(1).replace('(', '') + matches.group(2)
                     links = self.searchTitle(title)
                     rating, header = self.searchTitleRanking(links)
+                    if not rating or not header:
+                        continue
 
                     if r'1080p' in torrent.title.lower():
                         torrent.resolution = 1080
@@ -143,6 +145,7 @@ class Imdb():
                     torrent.rating = rating
                     torrent.rated_at = arrow.utcnow().datetime
                     torrent.save()
+                    logging.info('Saved ' + torrent.title)
                     time.sleep(0.1)
                     # break
 
@@ -162,9 +165,12 @@ class Imdb():
         # print res.content
 
         soup = BeautifulSoup(res.content)
-        rows = soup.find('table', class_='findList').find_all('tr')
-        for row in rows:
-            links.append(row.find('a')['href'])
+        try:
+            rows = soup.find('table', class_='findList').find_all('tr')
+            for row in rows:
+                links.append(row.find('a')['href'])
+        except AttributeError:
+            logging.error('No table or rows in response!')
 
         return links
 
@@ -190,9 +196,8 @@ class Imdb():
                 rating = int(float(rating)*10)
                 return [rating, header]
             except AttributeError:
-                continue
-            # print 'rating='
-            # print rating
+                logging.error('No star box rating for title!')
+
         return [None, None]
 
 
