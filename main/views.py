@@ -57,17 +57,3 @@ def scrapeSeries(request):
     seriesScraper = SeriesScraper()
     seriesScraper.run()
     return HttpResponse(status=200)
-
-
-def scrapeOanda(request):
-    import requests
-    from google.appengine.api import mail
-    import json
-    url = 'https://api-fxpractice.oanda.com/labs/v1/orderbook_data?instrument=EUR_USD&period=21600'
-    headers = {'Authorization': 'Bearer e784eb5916aff0cef1e40384f91efcbc-894f13baacee725fe3294136ac8fa469'}
-    res = requests.get(url, headers=headers)
-    mail.send_mail_to_admins(
-        sender='jacoj82@gmail.com',
-        subject='oanda dump',
-        body=res,
-    )

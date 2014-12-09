@@ -10,6 +10,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     '.appspot.com',
     '127.0.0.1',
+    'localhost',
 ]
 
 # Activate django-dbindexer for the default database

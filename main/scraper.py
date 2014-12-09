@@ -8,12 +8,13 @@ from bs4 import BeautifulSoup
 import string
 import logging
 from django.db.models import Q
+from google.appengine.api import mail
 
 
 class Scraper():
     urlBase = 'http://thepiratebay.se'
     patternSize = re.compile(r'^.*?\([^\d]*(\d+)[^\d]*\).*$', re.U)
-    multiPages = [205, 207]
+    multiPages = [205, 207, 401]
     group = None
 
     def __init__(self):
@@ -75,15 +76,19 @@ class Scraper():
             # print det.prettify().encode('utf8')
 
             # requireds
-            item['title'] = det.find('div', id='title').text.strip()
-            item['files'] = det.find('dt', text=re.compile('Files:')).findNext('dd').text.strip()
-            item['size'] = self.patternSize.match(det.find('dt', text=re.compile('Size:')).findNext('dd').text).group(1)
-            item['uploaded_at'] = datetime.datetime.strptime(det.find('dt', text=re.compile('Uploaded:')).findNext('dd').text.strip(), '%Y-%m-%d %H:%M:%S %Z')
-            item['user'] = det.find('dt', text=re.compile('By:')).findNext('dd').text.strip()
-            item['seeders'] = det.find('dt', text=re.compile('Seeders:')).findNext('dd').text.strip()
-            item['leechers'] = det.find('dt', text=re.compile('Leechers:')).findNext('dd').text.strip()
-            item['magnet'] = det.find_all('a', title='Get this torrent')[0]['href']
-            item['nfo'] = det.find_all('div', class_='nfo')[0].text.strip()
+            try:
+                item['title'] = det.find('div', id='title').text.strip()
+                item['files'] = det.find('dt', text=re.compile('Files:')).findNext('dd').text.strip()
+                item['size'] = self.patternSize.match(det.find('dt', text=re.compile('Size:')).findNext('dd').text).group(1)
+                item['uploaded_at'] = datetime.datetime.strptime(det.find('dt', text=re.compile('Uploaded:')).findNext('dd').text.strip(), '%Y-%m-%d %H:%M:%S %Z')
+                item['user'] = det.find('dt', text=re.compile('By:')).findNext('dd').text.strip()
+                item['seeders'] = det.find('dt', text=re.compile('Seeders:')).findNext('dd').text.strip()
+                item['leechers'] = det.find('dt', text=re.compile('Leechers:')).findNext('dd').text.strip()
+                item['magnet'] = det.find_all('a', title='Get this torrent')[0]['href']
+                item['nfo'] = det.find_all('div', class_='nfo')[0].text.strip()
+            except AttributeError:
+                logging.warn('No title for {0}'.format(link['href']))
+                continue
 
             # optionals
             if det.find('div', class_='torpicture'):
@@ -218,16 +223,27 @@ class SeriesScraper():
     def extractSeriesTitles(self, category):
         titles = set()
         logging.debug('category', category)
-        for torrent in category.torrent_set.all(): #filter(series_title__isnull=True):
+        not_founds = []
+        for torrent in category.torrent_set.filter(series_title__isnull=True, created_at__gte=arrow.now().replace(days=-7).datetime):
             # print 'torrent', torrent
             titleGroups = re.match(r'(.*)(s\d{1,2})(e\d{1,2})', torrent.title, re.I)
             if titleGroups is not None:
                 titles.add(titleGroups.group(0))
                 torrent.series_title = titleGroups.group(1).replace('.', ' ').strip()
-                torrent.series_season = int(titleGroups.group(2)[2:])
-                torrent.series_episode = int(titleGroups.group(3)[2:])
+                torrent.series_season = int(titleGroups.group(2)[1:])
+                torrent.series_episode = int(titleGroups.group(3)[1:])
                 torrent.save()
+            else:
+                not_founds.append(torrent.title)
         logging.debug('series titles', titles)
+
+        # email not found titles
+        mail.send_mail_to_admins(
+            sender='jacoj82@gmail.com',
+            subject="Series titles not found",
+            body="\n".join(not_founds)
+        )
+
         return titles
 
 

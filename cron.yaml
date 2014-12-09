@@ -3,14 +3,15 @@ cron:
   url: /scrape/piratebay
   schedule: every 60 minutes from 00:00 to 05:00
 
+#- description: scrape the pirate bay
+#  url: /scrape/piratebay
+#  schedule: every 60 minutes from 12:00 to 17:00
+
 - description: scrape the imdb
   url: /scrape/movies
-  schedule: every 6 hours synchronized
+  schedule: every 12 hours synchronized
 
 - description: scrape the series
   url: /scrape/series
-  schedule: every day 05:40
+  schedule: every 12 hours synchronized
 
-- description: scrape oanda
-  url: /scrape/oanda
-  schedule: every 1 hours synchronized
