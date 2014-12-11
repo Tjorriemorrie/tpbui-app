@@ -1,0 +1,20 @@
+{
+  "name": "tpbui",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Tjorriemorrie/tpbui-app",
+  "authors": [
+    "Tjorriemorrie <jacoj82@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "less.js": "~1.7.4"
+  }
+}

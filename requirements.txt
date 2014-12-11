@@ -1,9 +1,1 @@
 google-api-python-client
-django-print-settings
-requests
-beautifulsoup4
-django-tables2
-six
-django-bootstrap3
-python-dateutil
-arrow

@@ -1,50 +1,35 @@
+application: tpbgui-app
+version: 7
 runtime: python27
 api_version: 1
-application: tpbgui
-version: 6
 threadsafe: yes
-default_expiration: "10s"
+default_expiration: "1s"
 
 builtins:
-- remote_api: on
+- remote_api: off
 
 inbound_services:
 - warmup
 
 libraries:
-- name: django
-  version: 1.5
-- name: numpy
-  version: 1.6.1
+- name: webapp2
+  version: 2.5.2
+- name: jinja2
+  version: 2.6
 
 handlers:
-- url: /_ah/queue/deferred
-  script: djangoappengine.deferred.handler.application
-  login: admin
+- url: /vendor
+  static_dir: vendor
 
-- url: /_ah/stats/.*
-  script: djangoappengine.appstats.application
+- url: /assets
+  static_dir: assets
 
-#- url: /static/django_tables2/.*
-#  static_dir: /gaenv_lib/django_tables2/static
-#  expiration: '0'
-
-- url: /media/admin
-  static_dir: django/contrib/admin/media
-
-- url: /static/admin
-  static_dir: django/contrib/admin/static/admin
-
-- url: /static/
-  static_dir: static/
-
-- url: /scrape/.*
-  script: djangoappengine.main.application
+- url: /admin.*
+  script: src.app.wsgi
   login: admin
 
 - url: /.*
-  login: required
-  script: djangoappengine.main.application
+  script: src.app.wsgi
 
 skip_files:
 - ^(.*/)?#.*#$
@@ -53,4 +38,3 @@ skip_files:
 - ^(.*/)?.*/RCS/.*$
 - ^(.*/)?\..*$
 - ^/.idea/.*$
-- ^bulkloader
