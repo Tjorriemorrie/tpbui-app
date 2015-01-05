@@ -1,5 +1,5 @@
-application: tpbgui-app
-version: 7
+application: tpbgui
+version: 8
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -16,6 +16,8 @@ libraries:
   version: 2.5.2
 - name: jinja2
   version: 2.6
+- name: ssl
+  version: 2.7
 
 handlers:
 - url: /vendor
@@ -24,11 +26,12 @@ handlers:
 - url: /assets
   static_dir: assets
 
-- url: /admin.*
-  script: src.app.wsgi
+- url: /cron/*
   login: admin
+  script: src.app.wsgi
 
 - url: /.*
+  login: required
   script: src.app.wsgi
 
 skip_files:

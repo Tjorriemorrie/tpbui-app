@@ -1,0 +1,49 @@
+{% extends '/templates/base.html' %}
+
+{% block content %}
+<div class="lead">
+	{{ cat|upper }}
+	<small class="text-muted">{{ torrents|count }}</small>
+</div>
+
+<table class="table table-bordered">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Title</th>
+		<th>Uploaded At</th>
+		<th>Size</th>
+		<th>Seeders</th>
+		<th>Leechers</th>
+		<th>Uploader</th>
+		<th>Files</th>
+	</tr>
+</thead>
+<tbody>
+	{% for torrent in torrents %}
+		<tr class="{{ 'downloaded' if torrent.is_downloaded() else '' }}">
+			<td class="download">
+				<a href="{{ torrent.magnet }}" data-key="{{ torrent.key.urlsafe() }}">
+					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+				</a>
+			</td>
+			<td>
+				<a href="{{ torrent.url }}" target="_blank">{{ torrent.title }}</a>
+			</td>
+			<td>{{ torrent.uploaded_at }}</td>
+			<td>{{ torrent.size }}</td>
+			<td>{{ torrent.seeders }}</td>
+			<td>{{ torrent.leechers }}</td>
+			<td>{{ torrent.uploader }}</td>
+			<td>{{ torrent.files }}</td>
+		</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}
+
+
+{% block js %}
+	{{ super() }}
+	<script src="/assets/js/download.js"></script>
+{% endblock %}

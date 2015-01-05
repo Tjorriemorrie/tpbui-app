@@ -1,0 +1,13 @@
+cron:
+- description: scrape kickass
+  url: /scrape
+  schedule: every 6 hours synchronized
+
+#- description: scrape the imdb
+#  url: /scrape/movies
+#  schedule: every 12 hours synchronized
+
+#- description: scrape the series
+#  url: /scrape/series
+#  schedule: every 12 hours synchronized
+

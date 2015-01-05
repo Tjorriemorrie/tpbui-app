@@ -1,5 +1,6 @@
 import os
 import jinja2
+from webapp2 import uri_for
 
 
 DEBUG = False
@@ -17,3 +18,4 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True,
 )
+JINJA_ENVIRONMENT.globals['uri_for'] = uri_for
