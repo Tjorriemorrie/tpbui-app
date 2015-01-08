@@ -26,7 +26,7 @@ class CategoryPage(BaseHandler):
             cat_filter = 'pc-games'
 
         # get torrents
-        torrents = Torrent.query(Torrent.category == cat_filter).order(-Torrent.created_at).fetch()
+        torrents = Torrent.query(Torrent.category == cat_filter).order(-Torrent.uploaded_at).fetch()
         self.template_values['torrents'] = torrents
         logging.info('torrents {0}'.format(len(torrents)))
 

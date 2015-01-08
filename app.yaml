@@ -26,9 +26,9 @@ handlers:
 - url: /assets
   static_dir: assets
 
-- url: /cron/*
-  login: admin
+- url: /scrape/.*
   script: src.app.wsgi
+  login: admin
 
 - url: /.*
   login: required

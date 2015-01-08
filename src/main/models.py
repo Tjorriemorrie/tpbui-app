@@ -1,5 +1,6 @@
 from google.appengine.ext import ndb
 from google.appengine.api import users
+import arrow
 
 
 class Torrent(ndb.Model):
@@ -9,18 +10,20 @@ class Torrent(ndb.Model):
     uploader = ndb.StringProperty()
     size = ndb.StringProperty()
     files = ndb.StringProperty()
-    uploaded_at = ndb.StringProperty()
+    uploaded_at = ndb.DateTimeProperty()
     seeders = ndb.IntegerProperty()
     leechers = ndb.IntegerProperty()
     magnet = ndb.StringProperty()
     created_at = ndb.DateTimeProperty(auto_now_add=True)
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
-    # movies (optional)
-    # rating = ndb.IntegerField(null=True, blank=True)
-    # rated_at = ndb.DateTimeField(null=True, blank=True)
-    # title_rating = ndb.CharField(max_length=255)
-    # resolution = ndb.IntegerField(null=True, blank=True)
+    # movies
+    #   (optional)
+    #   from imdb
+    rating = ndb.IntegerProperty()
+    rated_at = ndb.DateTimeProperty()
+    title_rating = ndb.StringProperty()
+    resolution = ndb.IntegerProperty()
 
     # series (optional)
     # series_title = ndb.CharField(max_length=45, null=True, blank=True)
@@ -34,6 +37,9 @@ class Torrent(ndb.Model):
         user = users.get_current_user()
         user_torrent = UserTorrent.query(UserTorrent.user == user, UserTorrent.torrent == str(self.key.id())).get()
         return True if user_torrent else False
+
+    def uploaded_time_ago(self):
+        return arrow.get(self.uploaded_at).humanize()
 
 
 class UserTorrent(ndb.Model):

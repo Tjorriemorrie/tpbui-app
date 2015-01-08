@@ -14,4 +14,15 @@ indexes:
   properties:
   - name: category
   - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: created_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: uploaded_at
     direction: desc

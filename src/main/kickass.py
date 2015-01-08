@@ -3,6 +3,7 @@ from src.main.models import Torrent
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
+import arrow
 
 
 class Kickass():
@@ -37,15 +38,20 @@ class Kickass():
             link = tr.find('a', class_='cellMainLink')
             item['url'] = link['href']
             item['title'] = link.text
-            item['uploader'] = tr.find('div', class_='torrentname').find('a', class_='plain').text
+            item['uploader'] = tr.find('div', class_='torrentname').span.a.text
             item['magnet'] = tr.find('a', class_='imagnet')['href']
             item['size'] = tr.find_all('td')[1].text
             item['files'] = tr.find_all('td')[2].text
-            item['uploaded_at'] = tr.find_all('td')[3].text
             item['seeders'] = int(tr.find_all('td')[4].text)
             item['leechers'] = int(tr.find_all('td')[5].text)
             item['category'] = category
-            pprint(item)
+            value, scale = tr.find_all('td')[3].text.strip().split()
+            scale += 's' if scale[-1] != 's' else ''
+            params = {scale:-int(value)}
+            # logging.info('scale = {0}'.format(params))
+            uploaded_at = arrow.utcnow().replace(**params)
+            item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
+            # pprint(item)
             list.append(item)
         logging.info('Kickass scraped {0} page {1} found {2}'.format(category, p, len(list)))
         return list
@@ -54,7 +60,7 @@ class Kickass():
     def saveList(self, list):
         logging.info('list: saving...')
         for item in list:
-            torrent = Torrent.query(Torrent.url == item['url'])
+            torrent = Torrent.query(Torrent.url == item['url']).get()
             if not torrent:
                 torrent = Torrent(**item)
             torrent.populate(**item)
