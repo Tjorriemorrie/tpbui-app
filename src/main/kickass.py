@@ -81,8 +81,9 @@ class Kickass():
             results.append(torrent.title)
             logging.info('Deleted {0}'.format(torrent.title))
             torrent.key.delete()
-        mail.send_mail_to_admins(
+        mail.send_mail(
             sender='jacoj82@gmail.com',
+            to='jacoj82@gmail.com',
             subject="Torrents cleaned",
             body='\n'.join(results),
         )

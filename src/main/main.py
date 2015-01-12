@@ -7,6 +7,7 @@ from google.appengine.ext import ndb
 
 class IndexPage(BaseHandler):
     def get(self):
+        self.template_values['movies'] = Torrent.query(Torrent.category == 'highres-movies', Torrent.uploader == 'YIFY', Torrent.resolution == 720).order(-Torrent.uploaded_at).fetch(10)
         logging.info('{0}'.format(self.template_values))
         template = JINJA_ENVIRONMENT.get_template('main/templates/index.html')
         self.response.write(template.render(self.template_values))

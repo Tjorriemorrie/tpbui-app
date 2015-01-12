@@ -20,7 +20,7 @@ class Series():
                 torrent.series_season = int(title_groups.group(2)[1:])
                 torrent.series_episode = int(title_groups.group(3)[1:])
                 torrent.put()
-                pprint(torrent)
+                # pprint(torrent)
                 results[torrent.title] = 'found as {0} S{1} E{2}'.format(torrent.series_title, torrent.series_season, torrent.series_episode)
             else:
                 results[torrent.title] = 'Not found'
@@ -28,8 +28,9 @@ class Series():
 
 
     def notify(self, results):
-        mail.send_mail_to_admins(
+        mail.send_mail(
             sender='jacoj82@gmail.com',
+            to='jacoj82@gmail.com',
             subject="Series extracted",
             body='\n'.join(['{0} {1}'.format(k, v) for k, v in results.iteritems()]),
         )

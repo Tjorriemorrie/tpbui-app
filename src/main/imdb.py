@@ -14,8 +14,7 @@ class Imdb():
 
     def runMovies(self):
         logging.info('IMDB: movies running...')
-        cutoff = arrow.utcnow().replace(days=-7).datetime
-        torrents = Torrent.query(Torrent.category == 'highres-movies', Torrent.created_at > cutoff, Torrent.rating == None).fetch(4)
+        torrents = Torrent.query(Torrent.category == 'highres-movies', Torrent.rating == None).fetch()
         logging.info('{0} torrents fetched'.format(len(torrents)))
         results = {}
         for torrent in torrents:
@@ -34,6 +33,7 @@ class Imdb():
                     results[torrent.title] = 'no page'
                     logging.info('No page for {0}'.format(torrent.title))
                     continue
+                logging.info('Found title as: {0}'.format(title))
 
                 if r'1080p' in torrent.title.lower():
                     torrent.resolution = 1080
@@ -105,8 +105,9 @@ class Imdb():
 
 
     def notify(self, results):
-        mail.send_mail_to_admins(
+        mail.send_mail(
             sender='jacoj82@gmail.com',
+            to='jacoj82@gmail.com',
             subject="IMDB scraped",
             body='\n'.join(['{0} {1}'.format(k, v) for k, v in results.iteritems()]),
         )

@@ -30,11 +30,26 @@ indexes:
 - kind: Torrent
   properties:
   - name: category
+  - name: resolution
+  - name: uploader
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category
   - name: series_title
   - name: created_at
 
 - kind: Torrent
   properties:
   - name: category
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: uploader
   - name: uploaded_at
     direction: desc
