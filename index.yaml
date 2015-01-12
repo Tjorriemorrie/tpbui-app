@@ -24,5 +24,17 @@ indexes:
 - kind: Torrent
   properties:
   - name: category
+  - name: rating
+  - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_title
+  - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category
   - name: uploaded_at
     direction: desc

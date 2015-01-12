@@ -14,8 +14,8 @@ class Imdb():
 
     def runMovies(self):
         logging.info('IMDB: movies running...')
-        cutoff = arrow.utcnow().replace(hours=-480).datetime
-        torrents = Torrent.query(Torrent.category == 'highres-movies', Torrent.created_at > cutoff).fetch(10)
+        cutoff = arrow.utcnow().replace(days=-7).datetime
+        torrents = Torrent.query(Torrent.category == 'highres-movies', Torrent.created_at > cutoff, Torrent.rating == None).fetch(4)
         logging.info('{0} torrents fetched'.format(len(torrents)))
         results = {}
         for torrent in torrents:
@@ -44,7 +44,7 @@ class Imdb():
                 torrent.rated_at = arrow.utcnow().datetime.replace(tzinfo=None)
                 logging.info('Saved {0}'.format(torrent))
                 torrent.put()
-                results[torrent.title] = 'found {0}'.format(rating)
+                results[torrent.title] = 'has rating {0}%'.format(rating)
 
         self.notify(results)
         logging.info('IMDB: movies ran')
@@ -108,5 +108,5 @@ class Imdb():
         mail.send_mail_to_admins(
             sender='jacoj82@gmail.com',
             subject="IMDB scraped",
-            body='\n'.join(results),
+            body='\n'.join(['{0} {1}'.format(k, v) for k, v in results.iteritems()]),
         )

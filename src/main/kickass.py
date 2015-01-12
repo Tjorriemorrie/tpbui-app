@@ -1,4 +1,5 @@
 import logging
+from google.appengine.api import mail
 from src.main.models import Torrent
 import requests
 from bs4 import BeautifulSoup
@@ -20,7 +21,8 @@ class Kickass():
         for category in self.CATEGORIES:
             logging.info('kickass cat {0}'.format(category))
             # get list of torrents per page
-            for p in xrange(1, 5):
+            pages = 6 if category == 'tv' else (4 if category == 'highres-movies' else 2)
+            for p in xrange(1, pages+1):
                 logging.info('kickass p {0}'.format(p))
                 list = self.scrapeList(category, p)
                 self.saveList(list)
@@ -28,7 +30,7 @@ class Kickass():
 
     def scrapeList(self, category, p):
         logging.info('Kickass scraping {0} page {1}'.format(category, p))
-        res = requests.get('{0}/{1}/{2}'.format(self.URL_BASE, category, p), timeout=59)
+        res = requests.get('{0}/{1}/{2}/'.format(self.URL_BASE, category, p), timeout=59)
         res.raise_for_status()
         soup = BeautifulSoup(res.content)
         table = soup.find('table', class_='data')
@@ -67,3 +69,21 @@ class Kickass():
             torrent.put()
             logging.info('list: saved {0}'.format(torrent))
         logging.info('list: saved')
+
+
+    def clean(self):
+        logging.info('Kickass: cleaning...')
+        results = []
+        cutoff = arrow.utcnow().replace(days=-7).datetime
+        torrents = Torrent.query(Torrent.updated_at < cutoff).order(Torrent.updated_at).fetch()
+        logging.info('{0} torrents found that is older than {1}'.format(len(torrents), cutoff))
+        for torrent in torrents[:len(torrents)/7]:
+            results.append(torrent.title)
+            logging.info('Deleted {0}'.format(torrent.title))
+            torrent.key.delete()
+        mail.send_mail_to_admins(
+            sender='jacoj82@gmail.com',
+            subject="Torrents cleaned",
+            body='\n'.join(results),
+        )
+        logging.info('Kickass: cleaned')

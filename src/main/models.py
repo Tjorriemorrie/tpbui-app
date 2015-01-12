@@ -25,10 +25,12 @@ class Torrent(ndb.Model):
     title_rating = ndb.StringProperty()
     resolution = ndb.IntegerProperty()
 
-    # series (optional)
-    # series_title = ndb.CharField(max_length=45, null=True, blank=True)
-    # series_season = ndb.IntegerField(null=True, blank=True)
-    # series_episode = ndb.IntegerField(null=True, blank=True)
+    # series
+    #   (optional)
+    #   no scraping, just extraction
+    series_title = ndb.StringProperty()
+    series_season = ndb.IntegerProperty()
+    series_episode = ndb.IntegerProperty()
 
     def __unicode__(self):
         return '{0}'.format(self.title)
