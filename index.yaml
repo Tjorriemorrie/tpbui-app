@@ -38,8 +38,62 @@ indexes:
 - kind: Torrent
   properties:
   - name: category
+  - name: series_episode
+  - name: magnet
+  - name: series_season
+  - name: series_title
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_episode
+  - name: magnet
+  - name: series_season
+  - name: series_title
+  - name: uploaded_at
+  - name: url
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_episode
+  - name: magnet
+  - name: series_season
+  - name: series_title
+  - name: url
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_episode
+  - name: magnet
+  - name: series_title
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_episode
+  - name: series_title
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_episode
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category
   - name: series_title
   - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category
+  - name: series_title
+  - name: uploaded_at
+    direction: desc
 
 - kind: Torrent
   properties:

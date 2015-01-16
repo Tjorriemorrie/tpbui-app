@@ -23,7 +23,7 @@
 	{% for torrent in torrents %}
 		<tr class="{{ 'downloaded' if torrent.is_downloaded() else '' }}">
 			<td class="download">
-				<a href="{{ torrent.magnet }}" data-key="{{ torrent.key.urlsafe() }}">
+				<a href="#download" data-magnet="{{ torrent.magnet }}" data-key="{{ torrent.key.urlsafe() }}">
 					<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 				</a>
 			</td>
@@ -31,7 +31,7 @@
 				{% if torrent.rating %}
 					<span class="pull-right"><strong>{{ torrent.rating }}%</strong></span>
 				{% endif %}
-				<a href="{{ torrent.url }}" target="_blank">{{ torrent.title }}</a>
+				<a href="http://kickass.so{{ torrent.url }}" target="_blank">{{ torrent.title }}</a>
 			</td>
 			<td>{{ torrent.uploaded_time_ago() }}</td>
 			<td>{{ torrent.size }}</td>

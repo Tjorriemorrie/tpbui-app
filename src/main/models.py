@@ -1,6 +1,7 @@
 from google.appengine.ext import ndb
 from google.appengine.api import users
 import arrow
+import logging
 
 
 class Torrent(ndb.Model):
@@ -53,3 +54,8 @@ class UserTorrent(ndb.Model):
 
     def __unicode__(self):
         return '{0} :|: {1}'.format(self.user, self.torrent)
+
+    def get_torrent(self):
+        torrent = Torrent.get_by_id(int(self.torrent))
+        logging.info('torrent {0} {1}'.format(self.torrent, torrent))
+        return torrent

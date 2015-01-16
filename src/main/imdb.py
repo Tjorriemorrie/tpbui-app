@@ -33,7 +33,7 @@ class Imdb():
                     results[torrent.title] = 'no page'
                     logging.info('No page for {0}'.format(torrent.title))
                     continue
-                logging.info('Found title as: {0}'.format(title))
+                logging.info('Found title as: {0}'.format(title.encode('utf-8')))
 
                 if r'1080p' in torrent.title.lower():
                     torrent.resolution = 1080
@@ -51,9 +51,9 @@ class Imdb():
 
 
     def searchTitle(self, title):
-        logging.info('IMDB title searching {0}'.format(title))
+        logging.info('IMDB title searching {0}'.format(title.encode('utf-8')))
         links = []
-        url = self.urlSearch.format(title)
+        url = self.urlSearch.format(title.encode('utf-8'))
         s = requests.Session()
         a = requests.adapters.HTTPAdapter(max_retries=3)
         s.mount('http://', a)
@@ -109,5 +109,5 @@ class Imdb():
             sender='jacoj82@gmail.com',
             to='jacoj82@gmail.com',
             subject="IMDB scraped",
-            body='\n'.join(['{0} {1}'.format(k, v) for k, v in results.iteritems()]),
+            body='\n'.join(['{0} {1}'.format(k.encode('utf-8'), v) for k, v in results.iteritems()]),
         )

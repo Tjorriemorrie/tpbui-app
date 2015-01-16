@@ -1,6 +1,6 @@
 import logging
 from google.appengine.api import mail
-from src.main.models import Torrent
+from src.main.models import Torrent, UserTorrent
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -74,13 +74,25 @@ class Kickass():
     def clean(self):
         logging.info('Kickass: cleaning...')
         results = []
+
+        # cleaning old torrents
         cutoff = arrow.utcnow().replace(days=-7).datetime
         torrents = Torrent.query(Torrent.updated_at < cutoff).order(Torrent.updated_at).fetch()
         logging.info('{0} torrents found that is older than {1}'.format(len(torrents), cutoff))
-        for torrent in torrents[:len(torrents)/7]:
+        for torrent in torrents:
             results.append(torrent.title)
-            logging.info('Deleted {0}'.format(torrent.title))
             torrent.key.delete()
+            logging.info('Deleted T {0}'.format(torrent.title))
+
+        # cleaning invalid user torrents
+        uts = UserTorrent.query().fetch()
+        logging.info('{0} usertorrents found that is invalid'.format(len(uts)))
+        for ut in uts:
+            if not ut.get_torrent():
+                results.append(str(ut.key.id()))
+                ut.key.delete()
+                logging.info('Deleted UT {0}'.format(ut.key.id()))
+
         mail.send_mail(
             sender='jacoj82@gmail.com',
             to='jacoj82@gmail.com',
