@@ -34,7 +34,7 @@ class Torrent(ndb.Model):
     series_episode = ndb.IntegerProperty()
 
     def __unicode__(self):
-        return '{0}'.format(self.title)
+        return u'{0}'.format(self.title)
 
     def is_downloaded(self):
         user = users.get_current_user()
@@ -53,9 +53,9 @@ class UserTorrent(ndb.Model):
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
     def __unicode__(self):
-        return '{0} :|: {1}'.format(self.user, self.torrent)
+        return u'{0} :|: {1}'.format(self.user, self.torrent)
 
     def get_torrent(self):
         torrent = Torrent.get_by_id(int(self.torrent))
-        logging.info('torrent {0} {1}'.format(self.torrent, torrent))
+        logging.info('torrent fetched from ut {0} is {1}'.format(self.torrent, torrent))
         return torrent

@@ -18,7 +18,7 @@
 					{% for movie in movies %}
 						<tr class="{{ 'downloaded' if movie.is_downloaded() else '' }}">
 							<td class="download">
-								<a href="{{ movie.magnet }}" data-key="{{ movie.key.urlsafe() }}">
+								<a href="#download" data-magnet="{{ movie.magnet }}" data-key="{{ movie.key.urlsafe() }}">
 									<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 								</a>
 								<small class="text-muted">{{ '{0:>6d}'.format(movie.seeders + movie.leechers) }}</small>
@@ -50,7 +50,7 @@
 						{% for episode in episodes_new if episode.series_title == series_watch %}
 							<tr class="{{ 'downloaded' if episode.is_downloaded() else '' }}">
 								<td class="download">
-									<a href="{{ episode.magnet }}" data-key="{{ episode.key.urlsafe() }}">
+									<a href="#download" data-magnet="{{ episode.magnet }}" data-key="{{ episode.key.urlsafe() }}">
 										<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 									</a>
 									<small class="text-muted">{{ '{0:>6d}'.format(episode.seeders + episode.leechers) }}</small>
@@ -82,7 +82,7 @@
 					{% for series in series_new %}
 						<tr class="{{ 'downloaded' if series.is_downloaded() else '' }}">
 							<td class="download">
-								<a href="{{ series.magnet }}" data-key="{{ series.key.urlsafe() }}">
+								<a href="#download" data-magnet="{{ series.magnet }}" data-key="{{ series.key.urlsafe() }}">
 									<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 								</a>
 								<small class="text-muted">{{ '{0:>6d}'.format(series.seeders + series.leechers) }}</small>
