@@ -82,7 +82,7 @@ class Kickass():
         for torrent in torrents:
             results.append(torrent.title)
             torrent.key.delete()
-            logging.info('Deleted T {0}'.format(torrent.title))
+            logging.info('Deleted T {0}'.format(torrent.title.encode('utf-8')))
 
         # cleaning invalid user torrents
         uts = UserTorrent.query().fetch()
