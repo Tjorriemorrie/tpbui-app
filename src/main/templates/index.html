@@ -54,6 +54,7 @@
 										<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 									</a>
 									<small class="text-muted">{{ '{0:>6d}'.format(episode.seeders + episode.leechers) }}</small>
+									<small class="text-muted">{{ '{0}'.format(episode.size) }}</small>
 								</td>
 								<td><a href="http://kickass.so{{ episode.url }}" target="_blank">{{ episode.series_title }}</a></td>
 								<td>
@@ -86,6 +87,7 @@
 									<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 								</a>
 								<small class="text-muted">{{ '{0:>6d}'.format(series.seeders + series.leechers) }}</small>
+								<small class="text-muted">{{ '{0}'.format(series.size) }}</small>
 							</td>
 							<td class="text-center">{{ series.series_season }}</td>
 							<td><a href="http://kickass.so{{ series.url }}" target="_blank">{{ series.series_title }}</a></td>

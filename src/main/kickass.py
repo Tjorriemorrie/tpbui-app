@@ -21,7 +21,7 @@ class Kickass():
         for category in self.CATEGORIES:
             logging.info('kickass cat {0}'.format(category))
             # get list of torrents per page
-            pages = 6 if category == 'tv' else (4 if category == 'highres-movies' else 2)
+            pages = 10 if category == 'tv' else (6 if category == 'highres-movies' else 3)
             for p in xrange(1, pages+1):
                 logging.info('kickass p {0}'.format(p))
                 list = self.scrapeList(category, p)

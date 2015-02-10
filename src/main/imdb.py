@@ -22,7 +22,7 @@ class Imdb():
             matches = re.match(r'(.*)\(?(19[5-9]\d|20[0-1]\d)', torrent.title)
             if matches is None:
                 results[torrent.title] = 'no match'
-                logging.info('No match for {0}'.format(torrent.title))
+                logging.info('No match for {0}'.format(torrent.title.encode('utf-8')))
             else:
                 # remove brackets in title
                 title = matches.group(1).replace('(', '') + matches.group(2)
