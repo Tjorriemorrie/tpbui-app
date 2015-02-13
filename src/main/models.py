@@ -5,16 +5,22 @@ import logging
 
 
 class Torrent(ndb.Model):
-    category = ndb.StringProperty()
-    url = ndb.StringProperty()
+    group_name = ndb.StringProperty()
+    group_code = ndb.IntegerProperty()
+    category_name = ndb.StringProperty()
+    category_code = ndb.IntegerProperty()
+
     title = ndb.StringProperty()
-    uploader = ndb.StringProperty()
-    size = ndb.StringProperty()
-    files = ndb.StringProperty()
+    url = ndb.StringProperty()
+    magnet = ndb.StringProperty()
+
     uploaded_at = ndb.DateTimeProperty()
+    size = ndb.IntegerProperty()
+    uploader = ndb.StringProperty()
+
     seeders = ndb.IntegerProperty()
     leechers = ndb.IntegerProperty()
-    magnet = ndb.StringProperty()
+
     created_at = ndb.DateTimeProperty(auto_now_add=True)
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
@@ -59,3 +65,5 @@ class UserTorrent(ndb.Model):
         torrent = Torrent.get_by_id(int(self.torrent))
         logging.info('torrent fetched from ut {0} is {1}'.format(self.torrent, torrent))
         return torrent
+
+

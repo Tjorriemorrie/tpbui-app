@@ -1,11 +1,11 @@
 cron:
-- description: scrape kickass
-  url: /scrape/kickass
+- description: scrape tpb
+  url: /scrape/tpb
   schedule: every day 14:00
 
-- description: clean the db
-  url: /scrape/clean
-  schedule: every day 14:10
+#- description: clean the db
+#  url: /scrape/clean
+#  schedule: every day 14:10
 
 - description: scrape the imdb
   url: /scrape/imdb

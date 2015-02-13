@@ -1,21 +1,148 @@
 import logging
-from src.main.models import CategoryGroup, Category
-from src.settings import CATEGORIES
+from google.appengine.ext import ndb
+import urllib2
+from bs4 import BeautifulSoup
+from google.appengine.api import urlfetch
+from datetime import datetime, timedelta
+from src.main.models import Torrent
 
 
 class PirateBay():
 
-    @staticmethod
-    def createCategories():
-        for group in CATEGORIES:
-            # group
-            key_name = '{0}_{1}'.format(group['code'], group['name'])
-            categoryGroup = CategoryGroup.get_or_insert(key_name, code=group['code'], name=group['name'])
-            logging.info('Category Group {0}'.format(categoryGroup))
+    GROUPS = [
+        {'code': 100, 'name': 'Audio', 'categories': [
+            {'code': 101, 'name': 'Music', 'pages': 1},
+            {'code': 102, 'name': 'AudioBooks', 'pages': 1},
+        ]},
+        {'code': 200, 'name': 'Video', 'categories': [
+            {'code': 205, 'name': 'TV Shows', 'pages': 1},
+            {'code': 207, 'name': 'HD Movies', 'pages': 1},
+            {'code': 209, 'name': '3D', 'pages': 1},
+        ]},
+        {'code': 300, 'name': 'Applications', 'categories': [
+            {'code': 301, 'name': 'Windows', 'pages': 1},
+            {'code': 302, 'name': 'Mac', 'pages': 1},
+        ]},
+        {'code': 400, 'name': 'Games', 'categories': [
+            {'code': 401, 'name': 'PC', 'pages': 1},
+        ]},
+        {'code': 600, 'name': 'Other', 'categories': [
+            {'code': 601, 'name': 'eBooks', 'pages': 1},
+        ]},
+    ]
 
-            # categories
-            for category_info in group['categories']:
-                category_info['category_group'] = categoryGroup
-                key_name = '{0}_{1}'.format(category_info['code'], category_info['name'])
-                category = Category.get_or_insert(key_name, code=category_info['code'], name=category_info['name'], category_group=categoryGroup)
-                logging.info('Category {0}'.format(category))
+
+    def __init__(self):
+        logging.info('PirateBay: init: started')
+        urlfetch.set_default_fetch_deadline(60)
+
+
+    def scrape(self):
+        logging.info('PirateBay: scrape: started')
+        for group in self.GROUPS:
+            logging.info('PirateBay: scrape: Group = {0}'.format(len(group)))
+            for category in group['categories']:
+                logging.info('PirateBay: scrape: Category = {0}'.format(len(category)))
+                for p in range(category['pages']):
+                    logging.info('PirateBay: scrape: Page = {0}'.format(p))
+                    self.scrapePage(group, category, p)
+
+        logging.info('PirateBay: scrape: ended')
+
+
+    def scrapePage(self, group, category, p):
+        logging.info('PirateBay: scrapePage: {0} {1} {2}'.format(group['name'], category['name'], p))
+
+        url = 'http://thepiratebay.se/browse/{0}/{1}/7'.format(category['code'], p)
+        logging.info('PirateBay: scrapePage: url {0}'.format(url))
+        res = urlfetch.fetch(url)
+        # logging.info('res {0}'.format(res.content))
+
+        item = {
+            'group_code': group['code'],
+            'group_name': group['name'],
+            'category_code': category['code'],
+            'category_name': category['name'],
+        }
+
+        html = BeautifulSoup(res.content)
+        for row in html.find('table', id='searchResult').find_all('tr')[1:-1]:
+            # logging.info('row html {0}'.format(row))
+            row_top = row.find('div', class_='detName')
+            # title
+            item['title'] = row_top.find('a').text
+            # url
+            item['url'] = row_top.find('a')['href']
+            # magnet
+            item['magnet'] = row.find('a', title='Download this torrent using magnet')['href']
+
+            details = row.find('font', class_='detDesc').text
+            details_date, details_size, details_uploader = details.split(',')
+
+            # date
+            details_date_val = details_date.split(' ', 1)[1].replace(u"\xa0", u" ")
+            if 'Y-day' in details_date_val:
+                details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:])) + timedelta(days=-1)
+            elif 'Today' in details_date_val:
+                details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:]))
+            else:
+                details_date_format = '%m-%d %H:%M' if ':' in details_date else '%m-%d %Y'
+                details_datetime = datetime.utcnow().strptime(details_date_val, details_date_format)
+            item['uploaded_at'] = details_datetime.replace(tzinfo=None)
+
+            # size
+            details_size_split = details_size.replace(u"\xa0", u" ").strip().split(' ')
+            details_size_mul = 9 if 'GiB' in details_size_split[2] else (6 if 'MiB' in details_size_split[2] else 3)
+            item['size'] = int((float(details_size_split[1])) * 10**details_size_mul)
+
+            # uploader
+            item['uploader'] = details_uploader.split(' ')[-1]
+
+            # seeders
+            item['seeders'] = int(row.find_all('td')[2].text)
+            # leechers
+            item['leechers'] = int(row.find_all('td')[3].text)
+
+            # logging.info('item {0}'.format(item))
+
+            # save
+            url_split = item['url'].split('/')
+            torrent = Torrent.get_or_insert(url_split[1], **item)
+            logging.info('Torrent {0}'.format(torrent))
+
+
+
+
+
+# DETAILED PAGE
+# item = {
+# 'tpb_id': link['href'].split('/')[2],
+# }
+# # print '<p>link = ' + link['href'] + '</p>'
+# resultDetail = self.scrapeDetail(self.urlBase + link['href'])
+# det = BeautifulSoup(resultDetail)
+# # print det.prettify().encode('utf8')
+# # requireds
+# try:
+# item['title'] = det.find('div', id='title').text.strip()
+# item['files'] = det.find('dt', text=re.compile('Files:')).findNext('dd').text.strip()
+# item['size'] = self.patternSize.match(det.find('dt', text=re.compile('Size:')).findNext('dd').text).group(1)
+# item['uploaded_at'] = datetime.datetime.strptime(det.find('dt', text=re.compile('Uploaded:')).findNext('dd').text.strip(), '%Y-%m-%d %H:%M:%S %Z')
+# item['user'] = det.find('dt', text=re.compile('By:')).findNext('dd').text.strip()
+# item['seeders'] = det.find('dt', text=re.compile('Seeders:')).findNext('dd').text.strip()
+# item['leechers'] = det.find('dt', text=re.compile('Leechers:')).findNext('dd').text.strip()
+# item['magnet'] = det.find_all('a', title='Get this torrent')[0]['href']
+# item['nfo'] = det.find_all('div', class_='nfo')[0].text.strip()
+# except AttributeError:
+# logging.warn('No title for {0}'.format(link['href']))
+# continue
+# # optionals
+# if det.find('div', class_='torpicture'):
+# item['img'] = 'http:' + det.find_all('img', title='picture')[0]['src']
+# else:
+# item['img'] = 'http://www.thepiratebay.se/static/img/tpblogo_sm_ny.gif'
+# self.saveData([item], category)
+# # print 'item'
+# # print item
+# # break
+#

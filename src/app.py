@@ -12,10 +12,11 @@ wsgi = webapp2.WSGIApplication(
         # url(r'^download/(?P<tpb_id>[0-9]+)$', views.download, name='download'),
 
         # cron
-        webapp2.Route(r'/scrape/kickass', name='scrape_kickass', handler=cron.KickassCtrl),
-        webapp2.Route(r'/scrape/imdb', name='scrape_imdb', handler=cron.ImdbCtrl),
+        webapp2.Route(r'/scrape/tpb', name='scrape_tpb', handler=cron.TpbCtrl),
+        # webapp2.Route(r'/scrape/kickass', name='scrape_tpb', handler=cron.TpbCtrl),
+        # webapp2.Route(r'/scrape/imdb', name='scrape_imdb', handler=cron.ImdbCtrl),
         webapp2.Route(r'/scrape/series', name='scrape_series', handler=cron.SeriesCtrl),
-        webapp2.Route(r'/scrape/clean', name='scrape_clean', handler=cron.CleanCtrl),
+        # webapp2.Route(r'/scrape/clean', name='scrape_clean', handler=cron.CleanCtrl),
     ],
     debug=DEBUG,
     config=CONFIG

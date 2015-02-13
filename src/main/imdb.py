@@ -1,7 +1,7 @@
 import logging
 from src.main.models import Torrent
 from google.appengine.api import mail
-import requests
+from google.appengine.api import urlfetch
 import arrow
 import re
 from bs4 import BeautifulSoup
@@ -11,6 +11,14 @@ from pprint import pprint
 class Imdb():
     # urlBase = 'http://www.metacritic.com/search/%s/%s/results?sort=relevancy'
     urlSearch = r'http://www.imdb.com/find?q={0}&&s=tt&ref_=fn_tt_pop'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'
+    }
+
+
+    def __init__(self):
+        urlfetch.set_default_fetch_deadline(60)
+
 
     def runMovies(self):
         logging.info('IMDB: movies running...')
@@ -54,16 +62,7 @@ class Imdb():
         logging.info('IMDB title searching {0}'.format(title.encode('utf-8')))
         links = []
         url = self.urlSearch.format(title.encode('utf-8'))
-        s = requests.Session()
-        a = requests.adapters.HTTPAdapter(max_retries=3)
-        s.mount('http://', a)
-        headers = {
-            # 'X-Real-IP': '251.223.201.178',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'
-        }
-        res = s.get(url, timeout=10, headers=headers)
-        res.raise_for_status()
-        # print res.content
+        res = urlfetch.fetch(url, headers=self.headers)
 
         soup = BeautifulSoup(res.content)
         try:
@@ -81,16 +80,7 @@ class Imdb():
         for link in links:
             logging.info('IMDB search page {0}...'.format(link))
             url = 'http://www.imdb.com{0}'.format(link)
-            s = requests.Session()
-            a = requests.adapters.HTTPAdapter(max_retries=3)
-            s.mount('http://', a)
-            headers = {
-                # 'X-Real-IP': '251.223.201.178',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; WOW64; rv:24.0) Gecko/20100101 Firefox/24.0'
-            }
-            res = s.get(url, timeout=10, headers=headers)
-            res.raise_for_status()
-            # print res.content
+            res = urlfetch.fetch(url, headers=self.headers)
 
             soup = BeautifulSoup(res.content)
             try:

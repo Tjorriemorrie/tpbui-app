@@ -1,7 +1,7 @@
 import logging
 from google.appengine.api import mail
 from src.main.models import Torrent, UserTorrent
-import requests
+# import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 import arrow

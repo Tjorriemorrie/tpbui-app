@@ -1,8 +1,18 @@
 import logging
 from src.base import BaseHandler
 from src.main.kickass import Kickass
+from src.main.piratebay import PirateBay
 from src.main.imdb import Imdb
 from src.main.series import Series
+
+
+class TpbCtrl(BaseHandler):
+    def get(self):
+        logging.info('Cron scrape tpb begin')
+        tpb = PirateBay()
+        tpb.scrape()
+        logging.info('Cron scrape tpb end')
+        self.response.status = '200 OK'
 
 
 class KickassCtrl(BaseHandler):
