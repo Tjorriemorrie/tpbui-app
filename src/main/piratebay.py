@@ -14,20 +14,20 @@ class PirateBay():
             {'code': 101, 'name': 'Music', 'pages': 1},
             {'code': 102, 'name': 'AudioBooks', 'pages': 1},
         ]},
-        {'code': 200, 'name': 'Video', 'categories': [
-            {'code': 205, 'name': 'TV Shows', 'pages': 1},
-            {'code': 207, 'name': 'HD Movies', 'pages': 1},
-            {'code': 209, 'name': '3D', 'pages': 1},
-        ]},
         {'code': 300, 'name': 'Applications', 'categories': [
             {'code': 301, 'name': 'Windows', 'pages': 1},
-            {'code': 302, 'name': 'Mac', 'pages': 1},
-        ]},
-        {'code': 400, 'name': 'Games', 'categories': [
-            {'code': 401, 'name': 'PC', 'pages': 1},
+            # {'code': 302, 'name': 'Mac', 'pages': 1},
         ]},
         {'code': 600, 'name': 'Other', 'categories': [
             {'code': 601, 'name': 'eBooks', 'pages': 1},
+        ]},
+        {'code': 400, 'name': 'Games', 'categories': [
+            {'code': 401, 'name': 'PC Games', 'pages': 2},
+        ]},
+        {'code': 200, 'name': 'Video', 'categories': [
+            {'code': 209, 'name': '3D', 'pages': 1},
+            {'code': 207, 'name': 'HD Movies', 'pages': 3},
+            {'code': 205, 'name': 'TV Shows', 'pages': 6},
         ]},
     ]
 
@@ -85,10 +85,13 @@ class PirateBay():
                 details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:])) + timedelta(days=-1)
             elif 'Today' in details_date_val:
                 details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:]))
+            elif ':' in details_date:
+                details_datetime = datetime.strptime(details_date_val, '%m-%d %H:%M')
+                details_datetime = details_datetime.replace(year=datetime.utcnow().year)
             else:
-                details_date_format = '%m-%d %H:%M' if ':' in details_date else '%m-%d %Y'
-                details_datetime = datetime.utcnow().strptime(details_date_val, details_date_format)
+                details_datetime = datetime.strptime(details_date_val, '%m-%d %Y')
             item['uploaded_at'] = details_datetime.replace(tzinfo=None)
+            logging.info('Date extracted {0} from {1}'.format(item['uploaded_at'], details_date.encode('utf-8')))
 
             # size
             details_size_split = details_size.replace(u"\xa0", u" ").strip().split(' ')
@@ -107,7 +110,12 @@ class PirateBay():
 
             # save
             url_split = item['url'].split('/')
-            torrent = Torrent.get_or_insert(url_split[1], **item)
+            item_key = ndb.Key('Torrent', url_split[2])
+            torrent = item_key.get()
+            if not torrent:
+                torrent = Torrent(key=item_key)
+            torrent.populate(**item)
+            torrent.put()
             logging.info('Torrent {0}'.format(torrent))
 
 

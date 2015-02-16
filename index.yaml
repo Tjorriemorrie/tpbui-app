@@ -107,3 +107,31 @@ indexes:
   - name: uploader
   - name: uploaded_at
     direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: resolution
+  - name: uploader
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: series_episode
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: series_title
+  - name: uploaded_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: uploaded_at
+    direction: desc

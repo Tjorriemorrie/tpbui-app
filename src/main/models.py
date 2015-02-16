@@ -44,26 +44,42 @@ class Torrent(ndb.Model):
 
     def is_downloaded(self):
         user = users.get_current_user()
-        user_torrent = UserTorrent.query(UserTorrent.user == user, UserTorrent.torrent == str(self.key.id())).get()
+        user_torrent = UserTorrent.query(UserTorrent.user == user, UserTorrent.torrent == self.key).get()
         return True if user_torrent else False
 
     def uploaded_time_ago(self):
         return arrow.get(self.uploaded_at).humanize()
 
+    def size_humanize(self):
+        # thousands
+        if self.size >= 10**9:
+            val = self.size / 10.**9
+            tail = 'GB'
+        elif self.size >= 10**6:
+            val = self.size / 10.**6
+            tail = 'MB'
+        elif self.size >= 10**3:
+            val = self.size / 10.**3
+            tail = 'KB'
+        else:
+            val = self.size
+            tail = 'B'
+        # rounding
+        if val < 10:
+            return '{0:.2f} {1}'.format(val, tail)
+        elif val < 100:
+            return '{0:.1f} {1}'.format(val, tail)
+        else:
+            return '{0:.0f} {1}'.format(val, tail)
+
 
 class UserTorrent(ndb.Model):
     user = ndb.UserProperty()
-    torrent = ndb.StringProperty()
+    torrent = ndb.KeyProperty(kind=Torrent)
+    category_code = ndb.IntegerProperty()
     downloaded_at = ndb.DateTimeProperty(auto_now_add=True)
     created_at = ndb.DateTimeProperty(auto_now_add=True)
     updated_at = ndb.DateTimeProperty(auto_now=True)
 
     def __unicode__(self):
         return u'{0} :|: {1}'.format(self.user, self.torrent)
-
-    def get_torrent(self):
-        torrent = Torrent.get_by_id(int(self.torrent))
-        logging.info('torrent fetched from ut {0} is {1}'.format(self.torrent, torrent))
-        return torrent
-
-

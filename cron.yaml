@@ -2,6 +2,7 @@ cron:
 - description: scrape tpb
   url: /scrape/tpb
   schedule: every day 14:00
+#  schedule: every 10 minutes synchronized
 
 #- description: clean the db
 #  url: /scrape/clean
@@ -14,4 +15,3 @@ cron:
 - description: scrape the series
   url: /scrape/series
   schedule: every day 14:15
-
