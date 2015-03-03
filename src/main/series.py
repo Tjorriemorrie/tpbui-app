@@ -9,7 +9,8 @@ import re
 class Series():
     def extract(self):
         logging.info('series: extraction running...')
-        torrents = Torrent.query(Torrent.category_code == 205, Torrent.series_title == None).fetch()
+        cutoff = arrow.utcnow().replace(days=-3).datetime
+        torrents = Torrent.query(Torrent.category_code == 205, Torrent.series_title == None, Torrent.uploaded_at > cutoff).fetch()
         logging.info('{0} torrents fetched'.format(len(torrents)))
         results = []
         for torrent in torrents:

@@ -5,29 +5,30 @@ from bs4 import BeautifulSoup
 from google.appengine.api import urlfetch
 from datetime import datetime, timedelta
 from src.main.models import Torrent
+from time import sleep
 
 
 class PirateBay():
 
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
-            {'code': 101, 'name': 'Music', 'pages': 1},
-            {'code': 102, 'name': 'AudioBooks', 'pages': 1},
-        ]},
-        {'code': 300, 'name': 'Applications', 'categories': [
-            {'code': 301, 'name': 'Windows', 'pages': 1},
-            # {'code': 302, 'name': 'Mac', 'pages': 1},
+            {'code': 101, 'name': 'Music', 'pages': 2},
+            {'code': 102, 'name': 'AudioBooks', 'pages': 2},
         ]},
         {'code': 600, 'name': 'Other', 'categories': [
-            {'code': 601, 'name': 'eBooks', 'pages': 1},
+            {'code': 601, 'name': 'eBooks', 'pages': 2},
+        ]},
+        {'code': 300, 'name': 'Applications', 'categories': [
+            {'code': 301, 'name': 'Windows', 'pages': 2},
+            # {'code': 302, 'name': 'Mac', 'pages': 1},
         ]},
         {'code': 400, 'name': 'Games', 'categories': [
             {'code': 401, 'name': 'PC Games', 'pages': 2},
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
-            {'code': 209, 'name': '3D', 'pages': 1},
-            {'code': 207, 'name': 'HD Movies', 'pages': 3},
-            {'code': 205, 'name': 'TV Shows', 'pages': 6},
+            {'code': 209, 'name': '3D', 'pages': 2},
+            {'code': 207, 'name': 'HD Movies', 'pages': 5},
+            {'code': 205, 'name': 'TV Shows', 'pages': 10},
         ]},
     ]
 
@@ -53,11 +54,6 @@ class PirateBay():
     def scrapePage(self, group, category, p):
         logging.info('PirateBay: scrapePage: {0} {1} {2}'.format(group['name'], category['name'], p))
 
-        url = 'http://thepiratebay.se/browse/{0}/{1}/7'.format(category['code'], p)
-        logging.info('PirateBay: scrapePage: url {0}'.format(url))
-        res = urlfetch.fetch(url)
-        # logging.info('res {0}'.format(res.content))
-
         item = {
             'group_code': group['code'],
             'group_name': group['name'],
@@ -65,58 +61,76 @@ class PirateBay():
             'category_name': category['name'],
         }
 
-        html = BeautifulSoup(res.content)
-        for row in html.find('table', id='searchResult').find_all('tr')[1:-1]:
-            # logging.info('row html {0}'.format(row))
-            row_top = row.find('div', class_='detName')
-            # title
-            item['title'] = row_top.find('a').text
-            # url
-            item['url'] = row_top.find('a')['href']
-            # magnet
-            item['magnet'] = row.find('a', title='Download this torrent using magnet')['href']
+        # 3 tries to scrape page
+        rows = None
+        for n in xrange(3):
+            try:
+                url = 'http://thepiratebay.se/browse/{0}/{1}/7/0'.format(category['code'], p)
+                logging.info('PirateBay: scrapePage: url {0}'.format(url))
+                res = urlfetch.fetch(url)
+                # logging.info('res {0}'.format(res.content))
 
-            details = row.find('font', class_='detDesc').text
-            details_date, details_size, details_uploader = details.split(',')
+                html = BeautifulSoup(res.content)
+                rows = html.find('table', id='searchResult').find_all('tr')[1:-1]
+                break
+            except:
+                logging.error('Could not scrape with try {0}'.format(n))
+                sleep(1)
 
-            # date
-            details_date_val = details_date.split(' ', 1)[1].replace(u"\xa0", u" ")
-            if 'Y-day' in details_date_val:
-                details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:])) + timedelta(days=-1)
-            elif 'Today' in details_date_val:
-                details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:]))
-            elif ':' in details_date:
-                details_datetime = datetime.strptime(details_date_val, '%m-%d %H:%M')
-                details_datetime = details_datetime.replace(year=datetime.utcnow().year)
-            else:
-                details_datetime = datetime.strptime(details_date_val, '%m-%d %Y')
-            item['uploaded_at'] = details_datetime.replace(tzinfo=None)
-            logging.info('Date extracted {0} from {1}'.format(item['uploaded_at'], details_date.encode('utf-8')))
+        if rows:
+            for row in rows:
+                # logging.info('row html {0}'.format(row))
+                row_top = row.find('div', class_='detName')
+                # title
+                item['title'] = row_top.find('a').text
+                # url
+                item['url'] = row_top.find('a')['href']
+                # magnet
+                item['magnet'] = row.find('a', title='Download this torrent using magnet')['href']
 
-            # size
-            details_size_split = details_size.replace(u"\xa0", u" ").strip().split(' ')
-            details_size_mul = 9 if 'GiB' in details_size_split[2] else (6 if 'MiB' in details_size_split[2] else 3)
-            item['size'] = int((float(details_size_split[1])) * 10**details_size_mul)
+                details = row.find('font', class_='detDesc').text
+                details_date, details_size, details_uploader = details.split(',')
 
-            # uploader
-            item['uploader'] = details_uploader.split(' ')[-1]
+                # date
+                details_date_val = details_date.split(' ', 1)[1].replace(u"\xa0", u" ")
+                if 'Y-day' in details_date_val:
+                    details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:])) + timedelta(days=-1)
+                elif 'Today' in details_date_val:
+                    details_datetime = datetime.utcnow().replace(hour=int(details_date_val[-5:-3]), minute=int(details_date_val[-2:]))
+                elif 'mins ago' in details_date_val:
+                    details_datetime = datetime.utcnow().replace(minute=int(details_date_val.split(' ')[0]))
+                elif ':' in details_date:
+                    details_datetime = datetime.strptime(details_date_val, '%m-%d %H:%M')
+                    details_datetime = details_datetime.replace(year=datetime.utcnow().year)
+                else:
+                    details_datetime = datetime.strptime(details_date_val, '%m-%d %Y')
+                item['uploaded_at'] = details_datetime.replace(tzinfo=None)
+                # logging.info('Date extracted {0} from {1}'.format(item['uploaded_at'], details_date.encode('utf-8')))
 
-            # seeders
-            item['seeders'] = int(row.find_all('td')[2].text)
-            # leechers
-            item['leechers'] = int(row.find_all('td')[3].text)
+                # size
+                details_size_split = details_size.replace(u"\xa0", u" ").strip().split(' ')
+                details_size_mul = 9 if 'GiB' in details_size_split[2] else (6 if 'MiB' in details_size_split[2] else 3)
+                item['size'] = int((float(details_size_split[1])) * 10**details_size_mul)
 
-            # logging.info('item {0}'.format(item))
+                # uploader
+                item['uploader'] = details_uploader.split(' ')[-1]
 
-            # save
-            url_split = item['url'].split('/')
-            item_key = ndb.Key('Torrent', url_split[2])
-            torrent = item_key.get()
-            if not torrent:
-                torrent = Torrent(key=item_key)
-            torrent.populate(**item)
-            torrent.put()
-            logging.info('Torrent {0}'.format(torrent))
+                # seeders
+                item['seeders'] = int(row.find_all('td')[2].text)
+                # leechers
+                item['leechers'] = int(row.find_all('td')[3].text)
+
+                # logging.info('item {0}'.format(item))
+
+                # save
+                url_split = item['url'].split('/')
+                item_key = ndb.Key('Torrent', url_split[2])
+                torrent = item_key.get()
+                if not torrent:
+                    torrent = Torrent(key=item_key)
+                torrent.populate(**item)
+                torrent.put()
+                logging.info('Torrent {0}'.format(torrent))
 
 
 

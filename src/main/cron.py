@@ -4,6 +4,7 @@ from src.main.kickass import Kickass
 from src.main.piratebay import PirateBay
 from src.main.imdb import Imdb
 from src.main.series import Series
+from src.main.cleaner import Cleaner
 
 
 class TpbCtrl(BaseHandler):
@@ -45,7 +46,7 @@ class SeriesCtrl(BaseHandler):
 class CleanCtrl(BaseHandler):
     def get(self):
         logging.info('Cron scrape clean begin')
-        kickass = Kickass()
-        kickass.clean()
+        cleaner = Cleaner()
+        cleaner.clean()
         logging.info('Cron scrape clean end')
         self.response.status = '200 OK'
