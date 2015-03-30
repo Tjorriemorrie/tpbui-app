@@ -34,7 +34,7 @@ class Imdb():
             # find year
             matches = re.match(r'(.*)\(?(19[5-9]\d|20[0-1]\d)', torrent.title)
             if matches is None:
-                results[torrent.title] = 'no match'
+                results[torrent.title] = 'MM%'
                 logging.info('No match for {0}'.format(torrent.title.encode('utf-8')))
             else:
                 # remove brackets in title
@@ -43,8 +43,8 @@ class Imdb():
                 links = self.searchTitle(title.replace(' ', '+'))
                 rating, header = self.searchTitleRanking(links)
                 if not rating or not header:
-                    results[torrent.title] = 'no page'
-                    logging.info('IMDB Title links not found {0}'.format(torrent.title))
+                    results[torrent.title] = 'PP%'
+                    logging.info('IMDB Title links not found {0}'.format(torrent.title.encode('utf-8')))
                     continue
                 logging.info('IMDB Title found {0}'.format(title.encode('utf-8')))
 
@@ -57,7 +57,7 @@ class Imdb():
                 torrent.rated_at = arrow.utcnow().datetime.replace(tzinfo=None)
                 logging.info('Saved {0}'.format(torrent))
                 torrent.put()
-                results[torrent.title] = 'has rating {0}%'.format(rating)
+                results[torrent.title] = '{0}%'.format(rating)
 
         self.notify(results)
         logging.info('IMDB: movies ran')
@@ -106,7 +106,7 @@ class Imdb():
                 header = soup.find('h1', class_='header').find('span', class_='itemprop').text.strip()
                 rating = int(float(rating)*10)
                 logging.info('IMDB search found rating {0}'.format(rating))
-                logging.info('IMDB search found header {0}'.format(header))
+                logging.info('IMDB search found header {0}'.format(header.encode('utf-8')))
                 return [rating, header]
             except AttributeError:
                 logging.warn('IMDB search: No star box rating for title!')

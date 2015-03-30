@@ -135,3 +135,9 @@ indexes:
   - name: category_code
   - name: uploaded_at
     direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: rating
+  - name: uploaded_at

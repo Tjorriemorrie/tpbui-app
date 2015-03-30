@@ -1,18 +1,18 @@
 cron:
 - description: scrape tpb
   url: /scrape/tpb
-  schedule: every day 15:00
+  schedule: every day 14:00
 #  schedule: every 10 minutes synchronized
 #  schedule: every 6 hours from 00:00 to 23:00
 
 - description: scrape the imdb
   url: /scrape/imdb
-  schedule: every day 15:10
+  schedule: every day 14:10
 #  schedule: every 6 hours from 00:10 to 23:10
 
 - description: scrape the series
   url: /scrape/series
-  schedule: every day 15:10
+  schedule: every day 14:10
 #  schedule: every 6 hours from 00:10 to 23:10
 
 - description: clean the db
