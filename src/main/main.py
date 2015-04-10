@@ -20,7 +20,7 @@ class IndexPage(BaseHandler):
         series_watching = []
 
         # watching series
-        uts = UserTorrent.query(UserTorrent.user == users.get_current_user(), UserTorrent.category_code == 205).fetch()
+        uts = UserTorrent.query(UserTorrent.user == users.get_current_user(), UserTorrent.category_code == 205).order(-UserTorrent.created_at).fetch()
         if uts:
             series_watching = set()
             for ut in [ut for ut in uts if ut.torrent.get().series_title]:
@@ -29,7 +29,7 @@ class IndexPage(BaseHandler):
 
             # new episodes
             if series_watching:
-                cutoff = arrow.utcnow().replace(days=-14).datetime
+                cutoff = arrow.utcnow().replace(days=-30).datetime
                 episodes_new = Torrent.query(Torrent.series_title.IN(series_watching), Torrent.uploaded_at > cutoff, Torrent.category_code == 205).order(-Torrent.uploaded_at).fetch()
                 logging.info('{0} episodes fetched for watched series'.format(len(episodes_new)))
 

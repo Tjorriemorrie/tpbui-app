@@ -12,7 +12,7 @@ class PirateBay():
 
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
-            {'code': 101, 'name': 'Music', 'pages': 2},
+            # {'code': 101, 'name': 'Music', 'pages': 2},
             {'code': 102, 'name': 'AudioBooks', 'pages': 2},
         ]},
         {'code': 600, 'name': 'Other', 'categories': [
@@ -26,9 +26,9 @@ class PirateBay():
             {'code': 401, 'name': 'PC Games', 'pages': 2},
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
-            {'code': 209, 'name': '3D', 'pages': 2},
-            {'code': 207, 'name': 'HD Movies', 'pages': 5},
-            {'code': 205, 'name': 'TV Shows', 'pages': 10},
+            {'code': 209, 'name': '3D', 'pages': 1},
+            {'code': 207, 'name': 'HD Movies', 'pages': 4},
+            {'code': 205, 'name': 'TV Shows', 'pages': 8},
         ]},
     ]
 

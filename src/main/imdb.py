@@ -27,7 +27,7 @@ class Imdb():
     def runMovies(self):
         logging.info('IMDB: movies running...')
         cutoff = arrow.utcnow().replace(days=-3).datetime
-        torrents = Torrent.query(Torrent.category_code == 207, Torrent.rating == None, Torrent.uploaded_at > cutoff).fetch()
+        torrents = Torrent.query(Torrent.category_code == 207, Torrent.rating == None, Torrent.created_at > cutoff).fetch()
         logging.info('{0} torrents fetched'.format(len(torrents)))
         results = {}
         for torrent in torrents:

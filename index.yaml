@@ -141,3 +141,22 @@ indexes:
   - name: category_code
   - name: rating
   - name: uploaded_at
+
+- kind: UserTorrent
+  properties:
+  - name: category_code
+  - name: user
+  - name: created_at
+    direction: desc
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: series_title
+  - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: rating
+  - name: created_at
