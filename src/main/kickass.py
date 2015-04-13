@@ -1,102 +1,117 @@
 import logging
+from google.appengine.ext import ndb
 from google.appengine.api import mail
+from google.appengine.api import urlfetch
 from src.main.models import Torrent, UserTorrent
 # import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
 import arrow
+import re
 
 
 class Kickass():
 
-    URL_BASE = 'http://kickass.so'
-    CATEGORIES = [
-        'highres-movies',
-        'tv',
-        'pc-games',
+    RE_TID = re.compile('.*-(t[0-9]*)\.html')
+    URL_BASE = 'http://kickass.to'
+    GROUPS = [
+        {'code': 100, 'name': 'Audio', 'categories': [
+            # {'code': 101, 'name': 'Music', 'pages': 2},
+            {'code': 102, 'name': 'AudioBooks', 'pages': 2, 'url': 'audio-books'},
+        ]},
+        {'code': 600, 'name': 'Other', 'categories': [
+            {'code': 601, 'name': 'eBooks', 'pages': 2, 'url': 'ebooks'},
+        ]},
+        {'code': 300, 'name': 'Applications', 'categories': [
+            {'code': 301, 'name': 'Windows', 'pages': 2, 'url': 'windows'},
+            # {'code': 302, 'name': 'Mac', 'pages': 1},
+        ]},
+        {'code': 400, 'name': 'Games', 'categories': [
+            {'code': 401, 'name': 'PC Games', 'pages': 2, 'url': 'pc-games'},
+        ]},
+        {'code': 200, 'name': 'Video', 'categories': [
+            {'code': 209, 'name': '3D', 'pages': 1, 'url': '3d-movies'},
+            {'code': 207, 'name': 'HD Movies', 'pages': 4, 'url': 'highres-movies'},
+            {'code': 205, 'name': 'TV Shows', 'pages': 8, 'url': 'tv'},
+        ]},
     ]
 
 
+    def __init__(self):
+        logging.info('PirateBay: init: started')
+        urlfetch.set_default_fetch_deadline(60)
+
+
     def scrape(self):
-        for category in self.CATEGORIES:
-            logging.info('kickass cat {0}'.format(category))
-            # get list of torrents per page
-            pages = 10 if category == 'tv' else (6 if category == 'highres-movies' else 3)
-            for p in xrange(1, pages+1):
-                logging.info('kickass p {0}'.format(p))
-                list = self.scrapeList(category, p)
-                self.saveList(list)
+        logging.info('Kickass: scrape: started')
+        for group in self.GROUPS:
+            logging.info('Kickass: scrape: Group = {0}'.format(len(group)))
+            for category in group['categories']:
+                logging.info(' -=- ' * 20)
+                logging.info('Kickass: scrape: Category = {0}'.format(len(category)))
+                for p in range(category['pages']):
+                    logging.info('Kickass: scrape: Page = {0}'.format(p))
+                    self.scrapePage(group, category, p)
 
 
-    def scrapeList(self, category, p):
-        logging.info('Kickass scraping {0} page {1}'.format(category, p))
-        res = requests.get('{0}/{1}/{2}/'.format(self.URL_BASE, category, p), timeout=59)
-        res.raise_for_status()
-        soup = BeautifulSoup(res.content)
-        table = soup.find('table', class_='data')
-        list = []
-        for tr in table.find_all('tr')[2:]:
-            item = {}
-            link = tr.find('a', class_='cellMainLink')
-            item['url'] = link['href']
-            item['title'] = link.text
-            item['uploader'] = tr.find('div', class_='torrentname').span.a.text
-            item['magnet'] = tr.find('a', class_='imagnet')['href']
-            item['size'] = tr.find_all('td')[1].text
-            item['files'] = tr.find_all('td')[2].text
-            item['seeders'] = int(tr.find_all('td')[4].text)
-            item['leechers'] = int(tr.find_all('td')[5].text)
-            item['category'] = category
-            value, scale = tr.find_all('td')[3].text.strip().split()
-            scale += 's' if scale[-1] != 's' else ''
-            params = {scale:-int(value)}
-            # logging.info('scale = {0}'.format(params))
-            uploaded_at = arrow.utcnow().replace(**params)
-            item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
-            # pprint(item)
-            list.append(item)
-        logging.info('Kickass scraped {0} page {1} found {2}'.format(category, p, len(list)))
-        return list
+    def scrapePage(self, group, category, p):
+        logging.info('Kickass: scrapePage: {0} {1} {2}'.format(group['name'], category['name'], p))
 
+        item = {
+            'group_code': group['code'],
+            'group_name': group['name'],
+            'category_code': category['code'],
+            'category_name': category['name'],
+        }
 
-    def saveList(self, list):
-        logging.info('list: saving...')
-        for item in list:
-            torrent = Torrent.query(Torrent.url == item['url']).get()
-            if not torrent:
-                torrent = Torrent(**item)
-            torrent.populate(**item)
-            torrent.put()
-            logging.info('list: saved {0}'.format(torrent))
-        logging.info('list: saved')
+        # 3 tries to scrape page
+        rows = None
+        for n in xrange(3):
+            try:
+                url = '{0}/{1}/{2}/'.format(self.URL_BASE, category['url'], p)
+                logging.info('Kickass: scrapePage: url {0}'.format(url))
+                res = urlfetch.fetch(url)
+                # logging.info('res {0}'.format(res.content))
 
+                html = BeautifulSoup(res.content)
+                rows = html.find('table', class_='data').find_all('tr')[2:]
+                break
+            except:
+                logging.error('Kickass: scrapePage: could not scrape with try {0}'.format(n))
 
-    def clean(self):
-        logging.info('Kickass: cleaning...')
-        results = []
+        logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
+        if rows:
+            for row in rows:
 
-        # cleaning old torrents
-        cutoff = arrow.utcnow().replace(days=-7).datetime
-        torrents = Torrent.query(Torrent.updated_at < cutoff).order(Torrent.updated_at).fetch()
-        logging.info('{0} torrents found that is older than {1}'.format(len(torrents), cutoff))
-        for torrent in torrents:
-            results.append(torrent.title)
-            torrent.key.delete()
-            logging.info('Deleted T {0}'.format(torrent.title.encode('utf-8')))
+                link = row.find('a', class_='cellMainLink')
+                item['title'] = link.text
+                item['url'] = link['href']
+                item['magnet'] = row.find('a', class_='imagnet')['href']
 
-        # cleaning invalid user torrents
-        uts = UserTorrent.query().fetch()
-        logging.info('{0} usertorrents found that is invalid'.format(len(uts)))
-        for ut in uts:
-            if not ut.get_torrent():
-                results.append(str(ut.key.id()))
-                ut.key.delete()
-                logging.info('Deleted UT {0}'.format(ut.key.id()))
+                # uploaded at
+                value, scale = row.find_all('td')[3].text.strip().split()
+                scale += 's' if scale[-1] != 's' else ''
+                params = {scale: -int(value)}
+                # logging.info('scale = {0}'.format(params))
+                uploaded_at = arrow.utcnow().replace(**params)
+                item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
 
-        mail.send_mail(
-            sender='jacoj82@gmail.com',
-            to='jacoj82@gmail.com',
-            subject="Torrents cleaned",
-            body='\n'.join(results),
-        )
-        logging.info('Kickass: cleaned')
+                # size
+                details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
+                details_size_mul = 9 if 'GB' in details_size_split[1] else (6 if 'MB' in details_size_split[1] else (3 if 'KB' in details_size_split[1] else 0))
+                item['size'] = int((float(details_size_split[0])) * 10**details_size_mul)
+
+                item['uploader'] = row.find('div', class_='torrentname').span.a.text
+
+                item['seeders'] = int(row.find_all('td')[4].text)
+                item['leechers'] = int(row.find_all('td')[5].text)
+
+                # save
+                match_group = re.match(self.RE_TID, item['url']).groups(0)
+                item_key = ndb.Key('Torrent', match_group[0])
+                torrent = item_key.get()
+                if not torrent:
+                    torrent = Torrent(key=item_key)
+                torrent.populate(**item)
+                torrent.put()
+                logging.info('Torrent {0}'.format(torrent))
