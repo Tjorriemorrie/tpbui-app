@@ -11,7 +11,7 @@ from time import sleep
 class IndexPage(BaseHandler):
     def get(self):
         # new movies
-        self.template_values['movies'] = Torrent.query(Torrent.category_code == 207, Torrent.uploader == 'YIFY', Torrent.resolution == 720).order(-Torrent.uploaded_at).fetch(30)
+        self.template_values['movies'] = Torrent.query(Torrent.category_code == 207, Torrent.uploader == 'YIFY').order(-Torrent.uploaded_at).fetch(30)
 
         # new series
         self.template_values['series_new'] = Torrent.query(Torrent.category_code == 205, Torrent.series_episode == 1).order(-Torrent.uploaded_at).fetch(15)
@@ -20,7 +20,8 @@ class IndexPage(BaseHandler):
         series_watching = []
 
         # watching series
-        uts = UserTorrent.query(UserTorrent.user == users.get_current_user(), UserTorrent.category_code == 205).order(-UserTorrent.created_at).fetch()
+        cutoff = arrow.utcnow().replace(days=-14).datetime
+        uts = UserTorrent.query(UserTorrent.user == users.get_current_user(), UserTorrent.category_code == 205, Torrent.created_at > cutoff).order(-UserTorrent.created_at).fetch()
         if uts:
             series_watching = set()
             for ut in [ut for ut in uts if ut.torrent.get().series_title]:
@@ -29,7 +30,6 @@ class IndexPage(BaseHandler):
 
             # new episodes
             if series_watching:
-                cutoff = arrow.utcnow().replace(days=-30).datetime
                 episodes_new = Torrent.query(Torrent.series_title.IN(series_watching), Torrent.uploaded_at > cutoff, Torrent.category_code == 205).order(-Torrent.uploaded_at).fetch()
                 logging.info('{0} episodes fetched for watched series'.format(len(episodes_new)))
 

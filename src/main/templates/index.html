@@ -12,6 +12,7 @@
 						<th>&nbsp;</th>
 						<th>Rating</th>
 						<th>Title</th>
+						<th>Res</th>
 						<th>Date</th>
 					</tr>
 				</thead>
@@ -24,7 +25,8 @@
 								</a>
 							</td>
 							<td>{{ movie.rating }}%</td>
-							<td><a href="http://thepiratebay.se{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a></td>
+							<td><a href="http://kickass.to/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a></td>
+							<td>{{ movie.resolution }}</td>
 							<td>{{ movie.uploaded_time_ago() }}</td>
 						</tr>
 					{% endfor %}
@@ -56,7 +58,7 @@
 								{{ series.series_season }}
 							</td>
 							<td>
-								<a href="http://thepiratebay.se{{ series.url }}" target="_blank">{{ series.series_title }}</a>
+								<a href="http://kickass.to/{{ series.url }}" target="_blank">{{ series.series_title }}</a>
 								<small class="text-muted">{{ '{0}'.format(series.uploader) }}</small>
 							</td>
 							<td>

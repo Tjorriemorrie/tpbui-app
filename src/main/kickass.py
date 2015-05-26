@@ -17,7 +17,7 @@ class Kickass():
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
             # {'code': 101, 'name': 'Music', 'pages': 2},
-            {'code': 102, 'name': 'AudioBooks', 'pages': 2, 'url': 'audio-books'},
+            {'code': 102, 'name': 'AudioBooks', 'pages': 3, 'url': 'audio-books'},
         ]},
         {'code': 600, 'name': 'Other', 'categories': [
             {'code': 601, 'name': 'eBooks', 'pages': 2, 'url': 'ebooks'},
@@ -31,8 +31,8 @@ class Kickass():
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
             {'code': 209, 'name': '3D', 'pages': 1, 'url': '3d-movies'},
-            {'code': 207, 'name': 'HD Movies', 'pages': 4, 'url': 'highres-movies'},
-            {'code': 205, 'name': 'TV Shows', 'pages': 8, 'url': 'tv'},
+            {'code': 207, 'name': 'HD Movies', 'pages': 6, 'url': 'highres-movies'},
+            {'code': 205, 'name': 'TV Shows', 'pages': 12, 'url': 'tv'},
         ]},
     ]
 
@@ -65,7 +65,7 @@ class Kickass():
         }
 
         # 3 tries to scrape page
-        rows = None
+        rows = []
         for n in xrange(3):
             try:
                 url = '{0}/{1}/{2}/'.format(self.URL_BASE, category['url'], p)
@@ -78,40 +78,43 @@ class Kickass():
                 break
             except:
                 logging.error('Kickass: scrapePage: could not scrape with try {0}'.format(n))
-
         logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
+
         if rows:
             for row in rows:
 
-                link = row.find('a', class_='cellMainLink')
-                item['title'] = link.text
-                item['url'] = link['href']
-                item['magnet'] = row.find('a', class_='imagnet')['href']
+                try:
+                    link = row.find('a', class_='cellMainLink')
+                    item['title'] = link.text
+                    item['url'] = link['href']
+                    item['magnet'] = row.find('a', class_='imagnet')['href']
 
-                # uploaded at
-                value, scale = row.find_all('td')[3].text.strip().split()
-                scale += 's' if scale[-1] != 's' else ''
-                params = {scale: -int(value)}
-                # logging.info('scale = {0}'.format(params))
-                uploaded_at = arrow.utcnow().replace(**params)
-                item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
+                    # uploaded at
+                    value, scale = row.find_all('td')[3].text.strip().split()
+                    scale += 's' if scale[-1] != 's' else ''
+                    params = {scale: -int(value)}
+                    # logging.info('scale = {0}'.format(params))
+                    uploaded_at = arrow.utcnow().replace(**params)
+                    item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
 
-                # size
-                details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
-                details_size_mul = 9 if 'GB' in details_size_split[1] else (6 if 'MB' in details_size_split[1] else (3 if 'KB' in details_size_split[1] else 0))
-                item['size'] = int((float(details_size_split[0])) * 10**details_size_mul)
+                    # size
+                    details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
+                    details_size_mul = 9 if 'GB' in details_size_split[1] else (6 if 'MB' in details_size_split[1] else (3 if 'KB' in details_size_split[1] else 0))
+                    item['size'] = int((float(details_size_split[0])) * 10**details_size_mul)
 
-                item['uploader'] = row.find('div', class_='torrentname').span.a.text
+                    item['uploader'] = row.find('div', class_='torrentname').span.a.text
 
-                item['seeders'] = int(row.find_all('td')[4].text)
-                item['leechers'] = int(row.find_all('td')[5].text)
+                    item['seeders'] = int(row.find_all('td')[4].text)
+                    item['leechers'] = int(row.find_all('td')[5].text)
 
-                # save
-                match_group = re.match(self.RE_TID, item['url']).groups(0)
-                item_key = ndb.Key('Torrent', match_group[0])
-                torrent = item_key.get()
-                if not torrent:
-                    torrent = Torrent(key=item_key)
-                torrent.populate(**item)
-                torrent.put()
-                logging.info('Torrent {0}'.format(torrent))
+                    # save
+                    match_group = re.match(self.RE_TID, item['url']).groups(0)
+                    item_key = ndb.Key('Torrent', match_group[0])
+                    torrent = item_key.get()
+                    if not torrent:
+                        torrent = Torrent(key=item_key)
+                    torrent.populate(**item)
+                    torrent.put()
+                    logging.info('Torrent {0}'.format(torrent))
+                except Exception as e:
+                    pass

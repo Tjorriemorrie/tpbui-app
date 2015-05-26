@@ -111,6 +111,18 @@ indexes:
 - kind: Torrent
   properties:
   - name: category_code
+  - name: rating
+  - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: rating
+  - name: uploaded_at
+
+- kind: Torrent
+  properties:
+  - name: category_code
   - name: resolution
   - name: uploader
   - name: uploaded_at
@@ -127,6 +139,12 @@ indexes:
   properties:
   - name: category_code
   - name: series_title
+  - name: created_at
+
+- kind: Torrent
+  properties:
+  - name: category_code
+  - name: series_title
   - name: uploaded_at
     direction: desc
 
@@ -139,8 +157,9 @@ indexes:
 - kind: Torrent
   properties:
   - name: category_code
-  - name: rating
+  - name: uploader
   - name: uploaded_at
+    direction: desc
 
 - kind: UserTorrent
   properties:
@@ -148,15 +167,3 @@ indexes:
   - name: user
   - name: created_at
     direction: desc
-
-- kind: Torrent
-  properties:
-  - name: category_code
-  - name: series_title
-  - name: created_at
-
-- kind: Torrent
-  properties:
-  - name: category_code
-  - name: rating
-  - name: created_at
