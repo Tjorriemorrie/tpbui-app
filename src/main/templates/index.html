@@ -25,7 +25,10 @@
 								</a>
 							</td>
 							<td>{{ movie.rating }}%</td>
-							<td><a href="http://kickass.to/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a></td>
+							<td>
+								<a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a>
+								<br><small class="text-muted">{{ movie.title }}</small>
+							</td>
 							<td>{{ movie.resolution }}</td>
 							<td>{{ movie.uploaded_time_ago() }}</td>
 						</tr>

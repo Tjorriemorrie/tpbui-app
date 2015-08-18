@@ -13,7 +13,7 @@ import re
 class Kickass():
 
     RE_TID = re.compile('.*-(t[0-9]*)\.html')
-    URL_BASE = 'http://kickass.to'
+    URL_BASE = 'http://kat.cr'
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
             # {'code': 101, 'name': 'Music', 'pages': 2},
@@ -53,6 +53,9 @@ class Kickass():
                     logging.info('Kickass: scrape: Page = {0}'.format(p))
                     self.scrapePage(group, category, p)
 
+        logging.info('Kickass: scraping complete series')
+        self.scrapeSeriesComplete()
+
 
     def scrapePage(self, group, category, p):
         logging.info('Kickass: scrapePage: {0} {1} {2}'.format(group['name'], category['name'], p))
@@ -81,40 +84,74 @@ class Kickass():
         logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
 
         if rows:
-            for row in rows:
+            self.parseRows(item, rows)
 
-                try:
-                    link = row.find('a', class_='cellMainLink')
-                    item['title'] = link.text
-                    item['url'] = link['href']
-                    item['magnet'] = row.find('a', class_='imagnet')['href']
 
-                    # uploaded at
-                    value, scale = row.find_all('td')[3].text.strip().split()
-                    scale += 's' if scale[-1] != 's' else ''
-                    params = {scale: -int(value)}
-                    # logging.info('scale = {0}'.format(params))
-                    uploaded_at = arrow.utcnow().replace(**params)
-                    item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
+    def scrapeSeriesComplete(self):
+        logging.info('Kickass: scraping complete series')
 
-                    # size
-                    details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
-                    details_size_mul = 9 if 'GB' in details_size_split[1] else (6 if 'MB' in details_size_split[1] else (3 if 'KB' in details_size_split[1] else 0))
-                    item['size'] = int((float(details_size_split[0])) * 10**details_size_mul)
+        item = {
+            'group_code': 200,
+            'group_name': 'Video',
+            'category_code': 205,
+            'category_name': 'TV Shows',
+        }
 
-                    item['uploader'] = row.find('div', class_='torrentname').span.a.text
+        # 3 tries to scrape page
+        rows = []
+        for n in xrange(3):
+            try:
+                url = '{}/usearch/complete%20category:tv'.format(self.URL_BASE)
+                logging.info('Kickass: scrapePage: url {0}'.format(url))
+                res = urlfetch.fetch(url)
+                # logging.info('res {0}'.format(res.content))
 
-                    item['seeders'] = int(row.find_all('td')[4].text)
-                    item['leechers'] = int(row.find_all('td')[5].text)
+                html = BeautifulSoup(res.content)
+                rows = html.find('table', class_='data').find_all('tr')[2:]
+                break
+            except:
+                logging.error('Kickass: scrapePage: could not scrape with try {0}'.format(n))
+        logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
 
-                    # save
-                    match_group = re.match(self.RE_TID, item['url']).groups(0)
-                    item_key = ndb.Key('Torrent', match_group[0])
-                    torrent = item_key.get()
-                    if not torrent:
-                        torrent = Torrent(key=item_key)
-                    torrent.populate(**item)
-                    torrent.put()
-                    logging.info('Torrent {0}'.format(torrent))
-                except Exception as e:
-                    pass
+        if rows:
+            self.parseRows(item, rows)
+
+
+    def parseRows(self, item, rows):
+        for row in rows:
+
+            try:
+                link = row.find('a', class_='cellMainLink')
+                item['title'] = link.text
+                item['url'] = link['href']
+                item['magnet'] = row.find('a', class_='imagnet')['href']
+
+                # uploaded at
+                value, scale = row.find_all('td')[3].text.strip().split()
+                scale += 's' if scale[-1] != 's' else ''
+                params = {scale: -int(value)}
+                # logging.info('scale = {0}'.format(params))
+                uploaded_at = arrow.utcnow().replace(**params)
+                item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
+
+                # size
+                details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
+                details_size_mul = 9 if 'GB' in details_size_split[1] else (6 if 'MB' in details_size_split[1] else (3 if 'KB' in details_size_split[1] else 0))
+                item['size'] = int((float(details_size_split[0])) * 10**details_size_mul)
+
+                item['uploader'] = row.find('div', class_='torrentname').span.a.text
+
+                item['seeders'] = int(row.find_all('td')[4].text)
+                item['leechers'] = int(row.find_all('td')[5].text)
+
+                # save
+                match_group = re.match(self.RE_TID, item['url']).groups(0)
+                item_key = ndb.Key('Torrent', match_group[0])
+                torrent = item_key.get()
+                if not torrent:
+                    torrent = Torrent(key=item_key)
+                torrent.populate(**item)
+                torrent.put()
+                logging.info('Torrent {0}'.format(torrent))
+            except Exception as e:
+                pass
