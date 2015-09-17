@@ -20,15 +20,12 @@
 					{% for movie in movies %}
 						<tr class="{{ 'downloaded' if movie.is_downloaded() else '' }}">
 							<td class="download">
-								<a href="#download" data-magnet="{{ movie.magnet }}" data-key="{{ movie.key.urlsafe() }}">
+								<a href="#download" data-magnet="{{ movie.magnet }}" data-key="{{ movie.key.urlsafe() }}" title="{{ movie.title }}">
 									<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 								</a>
 							</td>
 							<td>{{ movie.rating }}%</td>
-							<td>
-								<a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a>
-								<br><small class="text-muted">{{ movie.title }}</small>
-							</td>
+							<td><a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a></td>
 							<td>{{ movie.resolution }}</td>
 							<td>{{ movie.uploaded_time_ago() }}</td>
 						</tr>
@@ -66,6 +63,7 @@
 							</td>
 							<td>
 								{{ series.uploaded_time_ago() }}
+								<br/><small class="text-muted">week {{ series.uploaded_week }}</small>
 							</td>
 						</tr>
 					{% endfor %}
@@ -108,9 +106,43 @@
 								</td>
 								<td><a href="http://thepiratebay.se{{ episode.url }}" target="_blank">{{ episode.uploader }}</a></td>
 								<td>{{ '{0}'.format(episode.size_humanize()) }}</td>
-								<td>{{ episode.uploaded_time_ago() }}</td>
+								<td>
+									{{ episode.uploaded_time_ago() }}
+									<br/><small class="text-muted">week {{ episode.uploaded_week }}</small>
+								</td>
 							</tr>
 						{% endfor %}
+					{% endfor %}
+				</tbody>
+			</table>
+
+			{# complete series #}
+			<h4 class="text-center">Series Completed</h4>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>Title</th>
+						<th>Uploader</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for series in completed %}
+						<tr class="{{ 'downloaded' if series.is_downloaded() else '' }}">
+							<td class="download">
+								<a href="#download" data-magnet="{{ series.magnet }}" data-key="{{ series.key.urlsafe() }}">
+									<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+								</a>
+								<small class="text-muted">{{ '{0:>6d}'.format(series.seeders + series.leechers) }}</small>
+							</td>
+							<td><a href="http://kat.cr/{{ series.url }}" target="_blank">{{ series.title }}</a></td>
+							<td><a href="http://kat.cr{{ series.url }}" target="_blank">{{ series.uploader }}</a></td>
+							<td>
+								{{ series.uploaded_time_ago() }}
+								<br/><small class="text-muted">week {{ series.uploaded_week }}</small>
+							</td>
+						</tr>
 					{% endfor %}
 				</tbody>
 			</table>

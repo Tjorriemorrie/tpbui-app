@@ -10,6 +10,8 @@ from time import sleep
 
 class PirateBay():
 
+    HOST = 'http://thepiratebay.mn'
+
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
             # {'code': 101, 'name': 'Music', 'pages': 2},
@@ -34,7 +36,6 @@ class PirateBay():
 
 
     def __init__(self):
-        logging.info('PirateBay: init: started')
         urlfetch.set_default_fetch_deadline(60)
 
 
@@ -65,7 +66,7 @@ class PirateBay():
         rows = None
         for n in xrange(3):
             try:
-                url = 'http://thepiratebay.se/browse/{0}/{1}/7/0'.format(category['code'], p)
+                url = '{2}/browse/{0}/{1}/7/0'.format(category['code'], p, self.HOST)
                 logging.info('PirateBay: scrapePage: url {0}'.format(url))
                 res = urlfetch.fetch(url)
                 # logging.info('res {0}'.format(res.content))

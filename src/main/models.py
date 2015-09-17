@@ -15,6 +15,7 @@ class Torrent(ndb.Model):
     magnet = ndb.StringProperty()
 
     uploaded_at = ndb.DateTimeProperty()
+    uploaded_week = ndb.IntegerProperty()
     size = ndb.IntegerProperty()
     uploader = ndb.StringProperty()
 
@@ -38,6 +39,7 @@ class Torrent(ndb.Model):
     series_title = ndb.StringProperty()
     series_season = ndb.IntegerProperty()
     series_episode = ndb.IntegerProperty()
+    series_complete = ndb.BooleanProperty()
 
     def __unicode__(self):
         return u'{0}'.format(self.title)

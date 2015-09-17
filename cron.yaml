@@ -1,13 +1,11 @@
 cron:
-#- description: scrape tpb
-#  url: /scrape/tpb
-#  schedule: every day 14:00
-#  schedule: every 10 minutes synchronized
-#  schedule: every 6 hours from 00:00 to 23:00
-
-- description: scrape kickass
-  url: /scrape/kickass
+- description: scrape tpb
+  url: /scrape/tpb
   schedule: every day 14:00
+
+#- description: scrape kickass
+#  url: /scrape/kickass
+#  schedule: every day 18:00
 #  schedule: every 5 minutes synchronized
 
 - description: scrape the imdb

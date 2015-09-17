@@ -38,7 +38,6 @@ class Kickass():
 
 
     def __init__(self):
-        logging.info('PirateBay: init: started')
         urlfetch.set_default_fetch_deadline(60)
 
 
@@ -114,17 +113,17 @@ class Kickass():
         logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
 
         if rows:
-            self.parseRows(item, rows)
+            self.parseRows(item, rows, True)
 
 
-    def parseRows(self, item, rows):
+    def parseRows(self, item, rows, is_complete=False):
+        logging.info('Parsing {} rows...'.format(len(rows)))
         for row in rows:
-
             try:
                 link = row.find('a', class_='cellMainLink')
                 item['title'] = link.text
                 item['url'] = link['href']
-                item['magnet'] = row.find('a', class_='imagnet')['href']
+                item['magnet'] = row.find('a', title=re.compile("magnet"))['href']
 
                 # uploaded at
                 value, scale = row.find_all('td')[3].text.strip().split()
@@ -133,6 +132,7 @@ class Kickass():
                 # logging.info('scale = {0}'.format(params))
                 uploaded_at = arrow.utcnow().replace(**params)
                 item['uploaded_at'] = uploaded_at.datetime.replace(tzinfo=None)
+                item['uploaded_week'] = int(item['uploaded_at'].strftime("%U"))
 
                 # size
                 details_size_split = row.find_all('td')[1].text.replace(u"\xa0", u" ").strip().split(' ')
@@ -151,7 +151,8 @@ class Kickass():
                 if not torrent:
                     torrent = Torrent(key=item_key)
                 torrent.populate(**item)
+                torrent.series_complete = is_complete
                 torrent.put()
                 logging.info('Torrent {0}'.format(torrent))
             except Exception as e:
-                pass
+                logging.exception(e)

@@ -11,7 +11,10 @@ from time import sleep
 class IndexPage(BaseHandler):
     def get(self):
         # new movies
-        self.template_values['movies'] = Torrent.query(Torrent.category_code == 207, Torrent.uploader == 'YIFY').order(-Torrent.uploaded_at).fetch(30)
+        self.template_values['movies'] = Torrent.query(Torrent.category_code == 207, Torrent.uploader == 'YIFY').order(-Torrent.uploaded_at).fetch(20)
+
+        # completed series
+        self.template_values['completed'] = Torrent.query(Torrent.series_complete == True).order(-Torrent.uploaded_at).fetch(20)
 
         # new series
         self.template_values['series_new'] = Torrent.query(Torrent.category_code == 205, Torrent.series_episode == 1).order(-Torrent.uploaded_at).fetch(15)
