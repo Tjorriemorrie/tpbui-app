@@ -1,7 +1,8 @@
+version: tpb
 runtime: python27
 api_version: 1
 threadsafe: yes
-default_expiration: "1s"
+default_expiration: "100s"
 
 builtins:
 - remote_api: off
