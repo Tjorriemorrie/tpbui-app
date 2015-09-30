@@ -2,6 +2,7 @@ import logging
 from src.base import BaseHandler
 from src.main.kickass import Kickass
 from src.main.piratebay import PirateBay
+from src.main.rarbg import Rarbg
 from src.main.imdb import Imdb
 from src.main.series import Series
 from src.main.cleaner import Cleaner
@@ -22,6 +23,15 @@ class KickassCtrl(BaseHandler):
         kickass = Kickass()
         kickass.scrape()
         logging.info('Cron scrape kickass end')
+        self.response.status = '200 OK'
+
+
+class RarbgCtrl(BaseHandler):
+    def get(self):
+        logging.info('Cron scrape rarbg begin')
+        rarbg = Rarbg()
+        rarbg.scrape()
+        logging.info('Cron scrape rarbg end')
         self.response.status = '200 OK'
 
 
