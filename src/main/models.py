@@ -1,7 +1,7 @@
+import logging
 from google.appengine.ext import ndb
 from google.appengine.api import users
 import arrow
-import logging
 
 
 class Torrent(ndb.Model):
@@ -74,6 +74,37 @@ class Torrent(ndb.Model):
         else:
             return '{0:.0f} {1}'.format(val, tail)
 
+    @staticmethod
+    def findLatestMovies(cutoff):
+        movies = Torrent.query(
+            Torrent.category_code == 207,
+            Torrent.uploaded_at >= cutoff
+        ).order(
+            -Torrent.uploaded_at
+        ).fetch()
+        logging.info('[Torrent] findLatestMovies: found {} since {}'.format(len(movies), cutoff))
+        return movies
+
+    @staticmethod
+    def findNewSeries(cutoff):
+        series = Torrent.query(
+            Torrent.category_code == 205,
+            Torrent.series_episode == 1,
+            Torrent.uploaded_at >= cutoff
+        ).order(-Torrent.uploaded_at).fetch()
+        logging.info('[Torrent] findNewSeries: found {} since {}'.format(len(series), cutoff))
+        return series
+
+    @staticmethod
+    def findWatchingEpisodes(series_watching, cutoff):
+        episodes = Torrent.query(
+            Torrent.series_title.IN(series_watching),
+            Torrent.uploaded_at > cutoff,
+            Torrent.category_code == 205
+        ).order(-Torrent.uploaded_at).fetch()
+        logging.info('[Torrent] findWatchingEpisodes: found {} for {} since {}'.format(len(episodes), series_watching, cutoff))
+        return episodes
+
 
 class UserTorrent(ndb.Model):
     user = ndb.UserProperty()
@@ -85,3 +116,13 @@ class UserTorrent(ndb.Model):
 
     def __unicode__(self):
         return u'{0} :|: {1}'.format(self.user, self.torrent)
+
+    @staticmethod
+    def findWatchingSeries(cutoff):
+        series = UserTorrent.query(
+            UserTorrent.user == users.get_current_user(),
+            UserTorrent.category_code == 205,
+            Torrent.created_at > cutoff
+        ).order(-UserTorrent.created_at).fetch()
+        logging.info('[UserTorrent] findWatchingSeries: found {} since {}'.format(len(series), cutoff))
+        return series

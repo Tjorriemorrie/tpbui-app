@@ -54,3 +54,6 @@ docs/_build/
 target/
 
 .idea/
+
+# lib for pip installs
+lib/

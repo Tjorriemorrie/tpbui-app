@@ -37,6 +37,7 @@ class Kickass():
     ]
 
 
+
     def __init__(self):
         urlfetch.set_default_fetch_deadline(60)
 
@@ -53,7 +54,7 @@ class Kickass():
                     self.scrapePage(group, category, p)
 
         logging.info('Kickass: scraping complete series')
-        self.scrapeSeriesComplete()
+        # self.scrapeSeriesComplete()
 
 
     def scrapePage(self, group, category, p):

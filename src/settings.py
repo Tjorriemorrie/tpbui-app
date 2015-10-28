@@ -19,3 +19,4 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     autoescape=True,
 )
 JINJA_ENVIRONMENT.globals['uri_for'] = uri_for
+
