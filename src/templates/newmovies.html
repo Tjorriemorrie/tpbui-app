@@ -7,7 +7,9 @@
 		<tr>
 			<th>&nbsp;</th>
 			<th>Rating</th>
+			<th>Size</th>
 			<th>Title</th>
+			<th>Uploader</th>
 			<th>Res</th>
 			<th>Date</th>
 		</tr>
@@ -22,7 +24,9 @@
 					</a>
 				</td>
 				<td>{{ movie.rating }}%</td>
-				<td><a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title_rating }}</a></td>
+				<td>{{ movie.size_humanize() }}</td>
+				<td><a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title }}</a></td>
+				<td>{{ movie.uploader }}</td>
 				<td>{{ movie.resolution }}</td>
 				<td>{{ movie.uploaded_time_ago() }}</td>
 			</tr>
