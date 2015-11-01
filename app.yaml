@@ -6,9 +6,6 @@ default_expiration: "100s"
 builtins:
 - remote_api: off
 
-inbound_services:
-- warmup
-
 libraries:
 - name: webapp2
   version: 2.5.2
@@ -31,13 +28,3 @@ handlers:
 - url: /.*
   login: required
   script: src.app.wsgi
-
-skip_files:
-- ^(.*/)?#.*#$
-- ^(.*/)?.*~$
-- ^(.*/)?.*\.py[co]$
-- ^(.*/)?.*/RCS/.*$
-- ^(.*/)?\..*$
-- ^/.idea/.*$
-- .*less$
-- .*map$

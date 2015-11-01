@@ -1,11 +1,8 @@
 import logging
 from google.appengine.ext import ndb
-from google.appengine.api import mail
-from google.appengine.api import urlfetch
+from google.appengine.api import mail, urlfetch, taskqueue
 from src.main.models import Torrent, UserTorrent
-# import requests
 from bs4 import BeautifulSoup
-from pprint import pprint
 import arrow
 import re
 
@@ -27,7 +24,7 @@ class Kickass():
             # {'code': 302, 'name': 'Mac', 'pages': 1},
         ]},
         {'code': 400, 'name': 'Games', 'categories': [
-            {'code': 401, 'name': 'PC Games', 'pages': 2, 'url': 'pc-games'},
+            {'code': 401, 'name': 'PC Games', 'pages': 2, 'url': 'windows-games'},
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
             {'code': 209, 'name': '3D', 'pages': 1, 'url': '3d-movies'},
@@ -37,7 +34,6 @@ class Kickass():
     ]
 
 
-
     def __init__(self):
         urlfetch.set_default_fetch_deadline(60)
 
@@ -45,85 +41,88 @@ class Kickass():
     def scrape(self):
         logging.info('Kickass: scrape: started')
         for group in self.GROUPS:
-            logging.info('Kickass: scrape: Group = {0}'.format(len(group)))
+            logging.info('Kickass: scrape: Group = {}'.format(len(group)))
             for category in group['categories']:
-                logging.info(' -=- ' * 20)
-                logging.info('Kickass: scrape: Category = {0}'.format(len(category)))
-                for p in range(category['pages']):
-                    logging.info('Kickass: scrape: Page = {0}'.format(p))
-                    self.scrapePage(group, category, p)
+                params = {
+                    'group_code': group['code'],
+                    'group_name': group['name'],
+                    'category_code': category['code'],
+                    'category_name': category['name'],
+                    'url': category['url'],
+                    'pages': category['pages'],
+                    'p': 1,
+                }
+                taskqueue.add(url='/scrape/kickasspage', params=params)
+                logging.info('Kickass: taskqueue: {}'.format(params))
 
-        logging.info('Kickass: scraping complete series')
-        # self.scrapeSeriesComplete()
-
-
-    def scrapePage(self, group, category, p):
-        logging.info('Kickass: scrapePage: {0} {1} {2}'.format(group['name'], category['name'], p))
-
-        item = {
-            'group_code': group['code'],
-            'group_name': group['name'],
-            'category_code': category['code'],
-            'category_name': category['name'],
-        }
-
-        # 3 tries to scrape page
-        rows = []
-        for n in xrange(3):
-            try:
-                url = '{0}/{1}/{2}/'.format(self.URL_BASE, category['url'], p)
-                logging.info('Kickass: scrapePage: url {0}'.format(url))
-                res = urlfetch.fetch(url)
-                # logging.info('res {0}'.format(res.content))
-
-                html = BeautifulSoup(res.content)
-                rows = html.find('table', class_='data').find_all('tr')[2:]
-                break
-            except:
-                logging.error('Kickass: scrapePage: could not scrape with try {0}'.format(n))
-        logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
-
-        if rows:
-            self.parseRows(item, rows)
+        logging.info('Kickass: scraping tasks created')
 
 
-    def scrapeSeriesComplete(self):
-        logging.info('Kickass: scraping complete series')
-
-        item = {
-            'group_code': 200,
-            'group_name': 'Video',
-            'category_code': 205,
-            'category_name': 'TV Shows',
-        }
+    def scrapePage(self, group_code, group_name, category_code, category_name, url_section, pages, p):
+        logging.info('Kickass: scrapePage: {}'.format(group_code))
+        logging.info('Kickass: scrapePage: {}'.format(group_name))
+        logging.info('Kickass: scrapePage: {}'.format(category_code))
+        logging.info('Kickass: scrapePage: {}'.format(category_name))
+        logging.info('Kickass: scrapePage: {}'.format(url_section))
+        logging.info('Kickass: scrapePage: {}'.format(pages))
+        logging.info('Kickass: scrapePage: {}'.format(p))
 
         # 3 tries to scrape page
         rows = []
-        for n in xrange(3):
+        url = '{}/{}/{}/'.format(self.URL_BASE, url_section, p)
+        logging.info('Kickass: scrapePage: url {}'.format(url))
+        for _ in xrange(3):
             try:
-                url = '{}/usearch/complete%20category:tv'.format(self.URL_BASE)
-                logging.info('Kickass: scrapePage: url {0}'.format(url))
                 res = urlfetch.fetch(url)
                 # logging.info('res {0}'.format(res.content))
 
-                html = BeautifulSoup(res.content)
+                html = BeautifulSoup(res.content, 'html.parser')
                 rows = html.find('table', class_='data').find_all('tr')[2:]
-                break
             except:
-                logging.error('Kickass: scrapePage: could not scrape with try {0}'.format(n))
-        logging.info('Kickass: scrapePage: found {0} in table'.format(len(rows)))
+                logging.error('Kickass: scrapePage: could not scrape with try {}'.format(_))
+            else:
+                break
+        logging.info('Kickass: scrapePage: found {} in table'.format(len(rows)))
 
         if rows:
-            self.parseRows(item, rows, True)
+            self.parseRows({
+                'group_code': group_code,
+                'group_name': group_name,
+                'category_code': category_code,
+                'category_name': category_name,
+            }, rows)
+
+            # scrape next page
+            params = {
+                'group_code': group_code,
+                'group_name': group_name,
+                'category_code': category_code,
+                'category_name': category_name,
+                'url': url_section,
+                'pages': pages,
+                'p': p + 1,
+            }
+            if params['p'] <= params['pages']:
+                taskqueue.add(url='/scrape/kickasspage', params=params)
+                logging.info('Kickass: taskqueue: {}'.format(params))
+
+        else:
+            mail.send_mail(
+                sender='jacoj82@gmail.com',
+                to='jacoj82@gmail.com',
+                subject="Torrent scraping failed",
+                body='Could not scrape {}'.format(url),
+            )
 
 
-    def parseRows(self, item, rows, is_complete=False):
-        logging.info('Parsing {} rows...'.format(len(rows)))
+
+    def parseRows(self, item, rows):
+        logging.info('[Kickass] parseRows {} rows...'.format(len(rows)))
         for row in rows:
             try:
                 link = row.find('a', class_='cellMainLink')
                 item['title'] = link.text
-                item['url'] = link['href']
+                item['url'] = '{}{}'.format(self.URL_BASE, link['href'].encode('utf-8'))
                 item['magnet'] = row.find('a', title=re.compile("magnet"))['href']
 
                 # uploaded at
@@ -147,13 +146,16 @@ class Kickass():
 
                 # save
                 match_group = re.match(self.RE_TID, item['url']).groups(0)
-                item_key = ndb.Key('Torrent', match_group[0])
-                torrent = item_key.get()
-                if not torrent:
-                    torrent = Torrent(key=item_key)
-                torrent.populate(**item)
-                torrent.series_complete = is_complete
-                torrent.put()
-                logging.info('Torrent {0}'.format(torrent))
+                torrent = Torrent.get_or_insert(match_group[0], **item)
+                logging.debug('Torrent {}'.format(torrent))
+
             except Exception as e:
                 logging.exception(e)
+                mail.send_mail(
+                    sender='jacoj82@gmail.com',
+                    to='jacoj82@gmail.com',
+                    subject="Torrent saving failed",
+                    body=e.message,
+                )
+
+        logging.info('{} torrents scraped in {}'.format(len(rows), item['category_name']))

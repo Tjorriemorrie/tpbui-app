@@ -25,6 +25,26 @@ class KickassCtrl(BaseHandler):
         self.response.status = '200 OK'
 
 
+class KickassPageCtrl(BaseHandler):
+    def post(self):
+        logging.info('Cron scrape kickass page begin')
+        req = self.request
+        params = {
+            'group_code': int(req.get('group_code')),
+            'group_name': req.get('group_name'),
+            'category_code': int(req.get('category_code')),
+            'category_name': req.get('category_name'),
+            'url_section': req.get('url'),
+            'pages': int(req.get('pages')),
+            'p': int(req.get('p')),
+        }
+        logging.info(params)
+        kickass = Kickass()
+        kickass.scrapePage(**params)
+        logging.info('Cron scrape kickass page end')
+        self.response.status = '200 OK'
+
+
 class ImdbCtrl(BaseHandler):
     def get(self):
         logging.info('Cron scrape imdb begin')

@@ -12,6 +12,7 @@ wsgi = webapp2.WSGIApplication(
 
         # cron
         webapp2.Route(r'/scrape/tpb', name='scrape_tpb', handler=cron.TpbCtrl),
+        webapp2.Route(r'/scrape/kickasspage', name='scrape_kickass_page', handler=cron.KickassPageCtrl),
         webapp2.Route(r'/scrape/kickass', name='scrape_kickass', handler=cron.KickassCtrl),
         webapp2.Route(r'/scrape/series', name='scrape_series', handler=cron.SeriesCtrl),
         webapp2.Route(r'/scrape/imdb', name='scrape_imdb', handler=cron.ImdbCtrl),
