@@ -25,7 +25,7 @@
 				</td>
 				<td>{{ movie.rating }}%</td>
 				<td>{{ movie.size_humanize() }}</td>
-				<td><a href="http://kat.cr/{{ movie.url }}" target="_blank">{{ movie.title }}</a></td>
+				<td><a href="{{ movie.url }}" target="_blank">{{ movie.title }}</a></td>
 				<td>{{ movie.uploader }}</td>
 				<td>{{ movie.resolution }}</td>
 				<td>{{ movie.uploaded_time_ago() }}</td>

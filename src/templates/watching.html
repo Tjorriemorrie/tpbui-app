@@ -6,9 +6,9 @@
 		<thead>
 		<tr>
 			<th>&nbsp;</th>
+			<th>Size</th>
 			<th>Episode</th>
 			<th>Uploader</th>
-			<th>Size</th>
 			<th>Date</th>
 		</tr>
 		</thead>
@@ -25,15 +25,15 @@
 						</a>
 						<small class="text-muted">{{ '{0:>6d}'.format(episode.seeders + episode.leechers) }}</small>
 					</td>
+					<td>{{ '{0}'.format(episode.size_humanize()) }}</td>
 					<td>
-						<a href="http://thepiratebay.se{{ episode.url }}" target="_blank">
+						<a href="{{ episode.url }}" target="_blank">
 							{{ 'S{0:02d}'.format(episode.series_season) if episode.series_season else '' }}
 							{{ 'E{0:02d}'.format(episode.series_episode) if episode.series_episode else '' }}
 						</a>
 					</td>
-					<td><a href="http://thepiratebay.se{{ episode.url }}" target="_blank">{{ episode.uploader }}</a>
+					<td><a href="{{ episode.url }}" target="_blank">{{ episode.uploader }}</a>
 					</td>
-					<td>{{ '{0}'.format(episode.size_humanize()) }}</td>
 					<td>
 						{{ episode.uploaded_time_ago() }}
 						<br/>
