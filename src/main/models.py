@@ -99,9 +99,12 @@ class Torrent(ndb.Model):
     def findWatchingEpisodes(series_watching, cutoff):
         episodes = Torrent.query(
             Torrent.series_title.IN(series_watching),
-            Torrent.uploaded_at > cutoff,
+            # Torrent.uploaded_at > cutoff,
             Torrent.category_code == 205
-        ).order(-Torrent.uploaded_at).fetch()
+        # ).order(
+        #     -Torrent.series_episode,
+        #     -Torrent.uploaded_at,
+        ).fetch()
         logging.info('[Torrent] findWatchingEpisodes: found {} for {} since {}'.format(len(episodes), series_watching, cutoff))
         return episodes
 
@@ -122,7 +125,7 @@ class UserTorrent(ndb.Model):
         series = UserTorrent.query(
             UserTorrent.user == users.get_current_user(),
             UserTorrent.category_code == 205,
-            Torrent.created_at > cutoff
+            # Torrent.created_at > cutoff
         ).order(-UserTorrent.created_at).fetch()
         logging.info('[UserTorrent] findWatchingSeries: found {} since {}'.format(len(series), cutoff))
         return series

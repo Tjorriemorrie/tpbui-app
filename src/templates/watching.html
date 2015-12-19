@@ -17,7 +17,8 @@
 			<tr>
 				<td colspan="5"><h4>{{ series_watch }}</h4></td>
 			</tr>
-			{% for episode in episodes_new if episode.series_title == series_watch %}
+            {% set has_downloaded = false %}
+			{% for episode in episodes_new|sort(attribute='series_episode', reverse=True) if episode.series_title == series_watch and not has_downloaded %}
 				<tr class="{{ 'downloaded' if episode.is_downloaded() else '' }}">
 					<td class="download">
 						<a href="#download" data-magnet="{{ episode.magnet }}" data-key="{{ episode.key.urlsafe() }}">
@@ -40,6 +41,7 @@
 						<small class="text-muted">week {{ episode.uploaded_week }}</small>
 					</td>
 				</tr>
+                {% set has_downloaded = has_downloaded or episode.is_downloaded() %}
 			{% endfor %}
 		{% endfor %}
 		</tbody>

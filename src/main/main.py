@@ -7,17 +7,20 @@ from google.appengine.api import users
 import arrow
 from time import sleep
 import datetime
+from collections import OrderedDict
 
 
 class IndexPage(BaseHandler):
     def get(self):
         logging.info('Index page requested')
 
-        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=14)
-        logging.info('Cutoff: {}'.format(cutoff))
 
         # new series
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=21)
         self.template_values['series_new'] = Torrent.findNewSeries(cutoff)
+
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+        logging.info('Cutoff: {}'.format(cutoff))
 
         # new movies
         self.template_values['movies'] = Torrent.findLatestMovies(cutoff)
@@ -30,9 +33,11 @@ class IndexPage(BaseHandler):
         if uts:
 
             # get set of watching titles
-            series_watching = set()
+            series_watching = OrderedDict()
             for ut in [ut for ut in uts if ut.torrent.get().series_title]:
-                series_watching.add(ut.torrent.get().series_title)
+                if ut.torrent.get().series_title not in series_watching:
+                    series_watching[ut.torrent.get().series_title] = 0
+            series_watching = series_watching.keys()
 
             # new episodes for series title
             if series_watching:
