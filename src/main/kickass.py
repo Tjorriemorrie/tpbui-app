@@ -14,13 +14,13 @@ class Kickass():
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
             # {'code': 101, 'name': 'Music', 'pages': 2},
-            {'code': 102, 'name': 'AudioBooks', 'pages': 3, 'url': 'audio-books'},
+            {'code': 102, 'name': 'AudioBooks', 'pages': 1, 'url': 'audio-books'},
         ]},
         {'code': 600, 'name': 'Other', 'categories': [
-            {'code': 601, 'name': 'eBooks', 'pages': 2, 'url': 'ebooks'},
+            {'code': 601, 'name': 'eBooks', 'pages': 1, 'url': 'ebooks'},
         ]},
         {'code': 300, 'name': 'Applications', 'categories': [
-            {'code': 301, 'name': 'Windows', 'pages': 2, 'url': 'windows'},
+            {'code': 301, 'name': 'Windows', 'pages': 1, 'url': 'windows'},
             # {'code': 302, 'name': 'Mac', 'pages': 1},
         ]},
         {'code': 400, 'name': 'Games', 'categories': [
@@ -28,8 +28,8 @@ class Kickass():
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
             {'code': 209, 'name': '3D', 'pages': 1, 'url': '3d-movies'},
-            {'code': 207, 'name': 'HD Movies', 'pages': 6, 'url': 'highres-movies'},
-            {'code': 205, 'name': 'TV Shows', 'pages': 12, 'url': 'tv'},
+            {'code': 207, 'name': 'HD Movies', 'pages': 4, 'url': 'highres-movies'},
+            {'code': 205, 'name': 'TV Shows', 'pages': 8, 'url': 'tv'},
         ]},
     ]
 
