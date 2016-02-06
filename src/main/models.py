@@ -109,6 +109,18 @@ class Torrent(ndb.Model):
         return episodes
 
 
+    @staticmethod
+    def findNewGames(cutoff):
+        games = Torrent.query(
+            Torrent.category_code == 401,
+            Torrent.uploaded_at > cutoff
+        ).order(
+            -Torrent.uploaded_at,
+        ).fetch()
+        logging.info('[Torrent] findNewGames: found {} since {}'.format(len(games), cutoff))
+        return games
+
+
 class UserTorrent(ndb.Model):
     user = ndb.UserProperty()
     torrent = ndb.KeyProperty(kind=Torrent)

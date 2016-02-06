@@ -16,19 +16,22 @@ class IndexPage(BaseHandler):
 
 
         # new series
-        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=21)
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=14)
         self.template_values['series_new'] = Torrent.findNewSeries(cutoff)
 
-        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
-        logging.info('Cutoff: {}'.format(cutoff))
+
+        # new games
+        self.template_values['games'] = Torrent.findNewGames(cutoff)
+
 
         # new movies
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
         self.template_values['movies'] = Torrent.findLatestMovies(cutoff)
 
-        episodes_new = []
-        series_watching = []
 
         # watching series
+        episodes_new = []
+        series_watching = []
         uts = UserTorrent.findWatchingSeries(cutoff)
         if uts:
 
@@ -45,6 +48,7 @@ class IndexPage(BaseHandler):
 
         self.template_values['series_watching'] = series_watching
         self.template_values['episodes_new'] = episodes_new
+
 
         # logging.info('{0}'.format(self.template_values))
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
