@@ -11,7 +11,7 @@ class Cleaner():
         results = []
 
         # fetch old torrents
-        cutoff = arrow.utcnow().replace(days=-67).datetime
+        cutoff = arrow.utcnow().replace(days=-85).datetime
         torrents = Torrent.query(Torrent.created_at < cutoff).fetch()
         logging.info('{0} torrents found that is older than {1}'.format(len(torrents), cutoff))
 

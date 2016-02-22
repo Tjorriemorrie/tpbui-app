@@ -11,8 +11,8 @@ class Kickass():
 
     RE_TID = re.compile('.*-(t[0-9]*)\.html')
     # URL_BASE = 'http://kickasstorrent.ytsre.net'
-    URL_BASE = 'http://unotorrent.com'
-    # URL_BASE = 'http://kat.cr'
+    # URL_BASE = 'http://unotorrent.com'
+    URL_BASE = 'http://kat.cr'
     GROUPS = [
         {'code': 100, 'name': 'Audio', 'categories': [
             # {'code': 101, 'name': 'Music', 'pages': 2},
