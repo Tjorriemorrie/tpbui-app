@@ -16,6 +16,19 @@ class TpbCtrl(BaseHandler):
         self.response.status = '200 OK'
 
 
+class TpbCategoryCtrl(BaseHandler):
+    def get(self, category):
+        logging.info('Cron scrape tpb category'.format(category))
+        tpb = PirateBay()
+        if category == 'series':
+            group = {'code': 200, 'name': 'Video'}
+            category = {'code': 205, 'name': 'TV Shows', 'pages': 1}
+            tpb.scrape_category(group, category)
+        else:
+            raise ValueError('unknown category')
+        self.response.status = '200 OK'
+
+
 class KickassCtrl(BaseHandler):
     def get(self):
         logging.info('Cron scrape kickass begin')

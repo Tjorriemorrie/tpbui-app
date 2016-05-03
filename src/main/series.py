@@ -1,5 +1,4 @@
 import logging
-from google.appengine.api import mail
 from src.main.models import Torrent
 from pprint import pprint
 import arrow

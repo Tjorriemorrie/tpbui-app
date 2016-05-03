@@ -11,6 +11,7 @@ wsgi = webapp2.WSGIApplication(
         webapp2.Route(r'/download/<key:.+>', name='download', handler=main.DownloadPage),
 
         # cron
+        webapp2.Route(r'/scrape/tpb/<category:.+>', name='scrape_tpb_category', handler=cron.TpbCategoryCtrl),
         webapp2.Route(r'/scrape/tpb', name='scrape_tpb', handler=cron.TpbCtrl),
         webapp2.Route(r'/scrape/kickass', name='scrape_kickass', handler=cron.KickassCtrl),
         webapp2.Route(r'/scrape/series', name='scrape_series', handler=cron.SeriesCtrl),
