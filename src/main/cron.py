@@ -58,8 +58,8 @@ class SeriesCtrl(BaseHandler):
 
 class CleanCtrl(BaseHandler):
     def get(self):
-        logging.info('Cron scrape clean begin')
+        logging.info('clean begin')
         cleaner = Cleaner()
         cleaner.clean()
-        logging.info('Cron scrape clean end')
+        logging.info('clean end')
         self.response.status = '200 OK'

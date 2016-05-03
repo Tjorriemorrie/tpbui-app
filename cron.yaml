@@ -1,26 +1,8 @@
 cron:
-#- description: scrape tpb
-#  url: /scrape/tpb
-#  schedule: every day 14:00
-
-- description: scrape tpb series
-  url: /scrape/tpb/series
-  schedule: every day 05:00
-
-#- description: scrape kickass
-#  url: /scrape/kickass
+#- description: scrape tpb series
+#  url: /scrape/tpb/series
 #  schedule: every day 05:00
 
-#- description: scrape the imdb
-#  url: /scrape/imdb
-#  schedule: every day 15:10
-#  schedule: every 6 hours from 00:10 to 23:10
-
-#- description: scrape the series
-#  url: /scrape/series
-#  schedule: every day 15:10
-#  schedule: every 6 hours from 00:10 to 23:10
-
 - description: clean the db
-  url: /scrape/clean
+  url: /cron/clean
   schedule: every day 14:20

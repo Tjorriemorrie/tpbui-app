@@ -29,11 +29,11 @@ class Cleaner():
                 ut.key.delete()
                 logging.info('Deleted UT {0}'.format(ut.key.id()))
 
-        mail.send_mail(
-            sender='jacoj82@gmail.com',
-            to='jacoj82@gmail.com',
-            subject="Torrents cleaned",
-            body='\n'.join(results),
-        )
+        # mail.send_mail(
+        #     sender='jacoj82@gmail.com',
+        #     to='jacoj82@gmail.com',
+        #     subject="Torrents cleaned",
+        #     body='\n'.join(results),
+        # )
 
         logging.info('Cleaner: cleaned')
