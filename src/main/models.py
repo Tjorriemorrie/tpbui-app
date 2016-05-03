@@ -10,6 +10,7 @@ class Torrent(ndb.Model):
     category_name = ndb.StringProperty()
     category_code = ndb.IntegerProperty()
 
+    guid = ndb.StringProperty()
     title = ndb.StringProperty()
     url = ndb.StringProperty()
     magnet = ndb.StringProperty()
