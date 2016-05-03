@@ -2,13 +2,17 @@
 	<div class="container">
 
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/">Kickass GUI</a>
+			<a class="navbar-brand" href="/">Torrents</a>
 		</div>
 
 		<ul class="nav navbar-nav">
-			<li class="{{ 'active' if cat == 'movies' else '' }}"><a href="{{ uri_for('category', cat='movies') }}">Movies</a></li>
-			<li class="{{ 'active' if cat == 'tv' else '' }}"><a href="{{ uri_for('category', cat='tv') }}">TV</a></li>
-			<li class="{{ 'active' if cat == 'games' else '' }}"><a href="{{ uri_for('category', cat='games') }}">Games</a></li>
+			{% for group in groups %}
+				{% for category in group.categories %}
+					<li class="{{ 'active' if cat == category['code'] else '' }}">
+						<a href="{{ uri_for('category', cat=category['code']) }}">{{ category['name'] }}</a>
+					</li>
+				{% endfor %}
+			{% endfor %}
 		</ul>
 
 	</div>
