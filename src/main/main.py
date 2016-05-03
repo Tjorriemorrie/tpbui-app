@@ -6,41 +6,52 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 import arrow
 from time import sleep
+import datetime
+from collections import OrderedDict
 
 
 class IndexPage(BaseHandler):
     def get(self):
-        # new movies
-        self.template_values['movies'] = Torrent.query(Torrent.category_code == 207, Torrent.uploader == 'YIFY').order(-Torrent.uploaded_at).fetch(20)
+        logging.info('Index page requested')
 
-        # completed series
-        self.template_values['completed'] = Torrent.query(Torrent.series_complete == True).order(-Torrent.uploaded_at).fetch(20)
 
         # new series
-        self.template_values['series_new'] = Torrent.query(Torrent.category_code == 205, Torrent.series_episode == 1).order(-Torrent.uploaded_at).fetch(15)
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=14)
+        self.template_values['series_new'] = Torrent.findNewSeries(cutoff)
 
-        episodes_new = []
-        series_watching = []
+
+        # new games
+        self.template_values['games'] = Torrent.findNewGames(cutoff)
+
+
+        # new movies
+        cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+        self.template_values['movies'] = Torrent.findLatestMovies(cutoff)
+
 
         # watching series
-        cutoff = arrow.utcnow().replace(days=-14).datetime
-        uts = UserTorrent.query(UserTorrent.user == users.get_current_user(), UserTorrent.category_code == 205, Torrent.created_at > cutoff).order(-UserTorrent.created_at).fetch()
+        episodes_new = []
+        series_watching = []
+        uts = UserTorrent.findWatchingSeries(cutoff)
         if uts:
-            series_watching = set()
-            for ut in [ut for ut in uts if ut.torrent.get().series_title]:
-                series_watching.add(ut.torrent.get().series_title)
-            logging.info('{0} series being watched by user'.format(len(uts)))
 
-            # new episodes
+            # get set of watching titles
+            series_watching = OrderedDict()
+            for ut in [ut for ut in uts if ut.torrent.get().series_title]:
+                if ut.torrent.get().series_title not in series_watching:
+                    series_watching[ut.torrent.get().series_title] = 0
+            series_watching = series_watching.keys()
+
+            # new episodes for series title
             if series_watching:
-                episodes_new = Torrent.query(Torrent.series_title.IN(series_watching), Torrent.uploaded_at > cutoff, Torrent.category_code == 205).order(-Torrent.uploaded_at).fetch()
-                logging.info('{0} episodes fetched for watched series'.format(len(episodes_new)))
+                episodes_new = Torrent.findWatchingEpisodes(series_watching, cutoff)
 
         self.template_values['series_watching'] = series_watching
         self.template_values['episodes_new'] = episodes_new
 
+
         # logging.info('{0}'.format(self.template_values))
-        template = JINJA_ENVIRONMENT.get_template('main/templates/index.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         self.response.write(template.render(self.template_values))
 
 
@@ -54,7 +65,7 @@ class CategoryPage(BaseHandler):
         self.template_values['torrents'] = torrents
         logging.info('torrents {0}'.format(len(torrents)))
 
-        template = JINJA_ENVIRONMENT.get_template('main/templates/category.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/category.html')
         self.response.write(template.render(self.template_values))
 
 
