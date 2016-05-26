@@ -11,7 +11,7 @@ from time import sleep
 
 class PirateBay():
 
-    HOST = 'http://thepiratebay.se'
+    HOST = 'http://thepiratebay.org'
 
     GROUPS = [
         # {'code': 100, 'name': 'Audio', 'categories': [
@@ -25,13 +25,13 @@ class PirateBay():
         #     {'code': 301, 'name': 'Windows', 'pages': 2},
         #     {'code': 302, 'name': 'Mac', 'pages': 1},
         # ]},
-        # {'code': 400, 'name': 'Games', 'categories': [
-        #     {'code': 401, 'name': 'PC Games', 'pages': 2},
-        # ]},
+        {'code': 400, 'name': 'Games', 'categories': [
+            {'code': 401, 'name': 'PC Games', 'pages': 1},
+        ]},
         {'code': 200, 'name': 'Video', 'categories': [
-            # {'code': 209, 'name': '3D', 'pages': 1},
-            {'code': 207, 'name': 'HD Movies', 'pages': 4},
-            {'code': 205, 'name': 'TV Shows', 'pages': 8},
+            {'code': 209, 'name': '3D', 'pages': 1},
+            {'code': 207, 'name': 'HD Movies', 'pages': 5},
+            {'code': 205, 'name': 'TV Shows', 'pages': 10},
         ]},
     ]
 
