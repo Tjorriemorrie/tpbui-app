@@ -4,5 +4,5 @@ cron:
   schedule: every day 07:30
 
 - description: clean the db
-  url: /scrape/clean
+  url: /cron/clean
   schedule: every day 15:20
