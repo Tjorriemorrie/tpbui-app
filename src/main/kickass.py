@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from google.appengine.ext import ndb
 from google.appengine.api import mail
 from google.appengine.api import urlfetch
-from series import extract
+from series import Series
 from src.main.models import Torrent, UserTorrent
 
 
@@ -26,12 +26,12 @@ class Kickass():
             # {'code': 302, 'name': 'Mac', 'pages': 1},
         # ]},
         {'code': 400, 'name': 'Games', 'categories': [
-            {'code': 401, 'name': 'PC Games', 'pages': 2, 'url': 'windows-games'},
+            {'code': 401, 'name': 'PC Games', 'pages': 1, 'url': 'windows-games'},
         ]},
         {'code': 200, 'name': 'Video', 'categories': [
             {'code': 209, 'name': '3D', 'pages': 1, 'url': '3d-movies'},
-            {'code': 207, 'name': 'HD Movies', 'pages': 6, 'url': 'highres-movies'},
-            {'code': 205, 'name': 'TV Shows', 'pages': 12, 'url': 'tv'},
+            {'code': 207, 'name': 'HD Movies', 'pages': 8, 'url': 'highres-movies'},
+            {'code': 205, 'name': 'TV Shows', 'pages': 16, 'url': 'tv'},
         ]},
     ]
 
@@ -112,6 +112,7 @@ class Kickass():
             self.parseRows(item, rows, True)
 
     def parseRows(self, item, rows, is_complete=False):
+        series = Series()
         logging.info('Parsing {} rows...'.format(len(rows)))
         for row in rows:
             try:
@@ -150,7 +151,7 @@ class Kickass():
 
                 # extract series
                 if torrent.category_code == 205:
-                    extract(torrent)
+                    series.parseSeries(torrent)
 
                 torrent.put()
                 logging.info('Torrent {0}'.format(torrent))
