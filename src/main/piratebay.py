@@ -11,7 +11,7 @@ from time import sleep
 
 class PirateBay():
 
-    HOST = 'http://thepiratebay.se'
+    HOST = 'http://thepiratebay.org'
 
     GROUPS = [
         # {'code': 100, 'name': 'Audio', 'categories': [
