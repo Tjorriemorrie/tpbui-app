@@ -1,6 +1,5 @@
-google-api-python-client
+requests
 beautifulsoup4
-prettyprint
-six
 python-dateutil
 arrow
+terminaltables

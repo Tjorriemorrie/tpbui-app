@@ -1,8 +1,0 @@
-cron:
-- description: scrape TPB
-  url: /cron/tpb
-  schedule: every day 07:30
-
-- description: clean the db
-  url: /cron/clean
-  schedule: every day 14:20
