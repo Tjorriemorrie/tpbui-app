@@ -1,9 +1,11 @@
+from gevent.pool import Pool
 import re
 import shelve
 import subprocess
 from datetime import datetime, timedelta
 from operator import itemgetter
 from time import sleep
+from humanize import naturalsize
 
 import arrow
 import requests
@@ -19,57 +21,51 @@ CATEGORIES = [
 ]
 
 PIRATES = [
-    'SVA', 'BATSHIT', 'DEFLATE', 'BATV', 'Ebi', 'FLEET', 'FS', 'PLUTONiUM', 'AFG', 'KILLERS', 'ZLY', 'FUM', 'LOL', 'HEEL', 'PROPER', 'RARBG', 'RiddlerA', 'ORGANiC',
+    'SVA', 'BATSHIT', 'DEFLATE', 'BATV', 'Ebi', 'FLEET', 'FS', 'PLUTONiUM', 'AFG', 'KILLERS',
+    'ZLY', 'FUM', 'LOL', 'HEEL', 'PROPER', 'RARBG', 'RiddlerA', 'ORGANiC', 'TBS', 'TJET',
+
     'MkvCage', 'JYK', 'YIFY', 'ShAaNiG', 'M2Tv', 'Hon3y', 'EVO', 'OHE', 'FGT', 'ETRG', 'Ozlem',
+    'MKV',
 ]
 
 
 def scrape(db):
     """Scrape categories"""
-    hours_ago = datetime.now() + timedelta(hours=-4)
+    hours_ago = datetime.now() + timedelta(hours=-6)
     for cat in CATEGORIES:
         db_cat = db.get(cat['code'], {'torrents': {}, 'scraped_at': datetime(2000, 1, 1)})
         if db_cat['scraped_at'] < hours_ago:
-            for p in range(cat['pages']):
-                scrape_page(db_cat['torrents'], cat, p)
-                # break
+            scrape_pages(db_cat['torrents'], cat)
             db_cat['scraped_at'] = datetime.now()
             db[cat['code']] = db_cat
 
 
-def scrape_page(db_cat, cat, p):
-    print('scraping {} page {}'.format(cat['name'], p))
+def scrape_pages(db_cat, cat):
+    print('scraping {} {} page'.format(cat['name'], cat['pages']))
 
-    # 3 tries to scrape page
-    rows = None
-    for n in range(3):
-        try:
-            url = url_browse.format(host=host, code=cat['code'], p=p)
-            res = requests.get(url)
-            # logging.info('res {0}'.format(res.content))
+    urls = [url_browse.format(host=host, code=cat['code'], p=p) for p in range(cat['pages'])]
+    pool = Pool(size=8)
+    results = pool.map(requests.get, urls)
+    pool.join()
+    # logging.info('res {0}'.format(res.content))
 
-            html = BeautifulSoup(res.content, 'html.parser')
-            rows = html.find('table', id='searchResult').find_all('tr')[1:-1]
-        except:
-            print('Could not scrape with try {}'.format(n))
-            sleep(n)
-        else:
-            break
+    for result in results:
+        html = BeautifulSoup(result.content, 'html.parser')
+        rows = html.find('table', id='searchResult').find_all('tr')[1:-1]
 
-    if not rows:
-        raise ValueError('Expected rows to parse')
+        for row in rows:
+            # parse
+            item = parse(cat, row)
 
-    for row in rows:
-        # parse
-        item = parse(cat, row)
+            # extract series
+            if item['category'] == '205':
+                parse_series(item)
 
-        # extract series
-        if item['category'] == '205':
-            parse_series(item)
-
-        # save
-        db_cat[item['guid']] = item
-        # logging.info('Torrent: {}'.format(torrent.title.encode('utf-8')))
+            # save
+            new_item = db_cat.get(item['guid'], {})
+            new_item.update(item)
+            db_cat[item['guid']] = new_item
+            # logging.info('Torrent: {}'.format(torrent.title.encode('utf-8')))
 
 
 def parse(cat, row):
@@ -92,7 +88,7 @@ def parse(cat, row):
             pirate = pirate_name
             break
     else:
-        print('Pirate? {}'.format(item['title']))
+        print('\npirate?\n{}\n'.format(item['title']))
     item['pirate'] = pirate
 
     # url
@@ -187,9 +183,26 @@ def parse_series(torrent):
                     print('series? {}'.format(torrent['title']))
 
 
+def pirate_rankings(db):
+    pirates = {}
+    uploaders = {}
+    torrents = list(db['205']['torrents'].values()) + list(db['207']['torrents'].values())
+    torrents = [t for t in torrents if t.get('quality')]
+    for torrent in torrents:
+        if torrent['pirate'] not in pirates:
+            pirates[torrent['pirate']] = 0
+        pirates[torrent['pirate']] += torrent['quality']
+        if torrent['uploader'] not in uploaders:
+            uploaders[torrent['uploader']] = 0
+        uploaders[torrent['uploader']] += torrent['quality']
+    return pirates, uploaders
+
+
 def main(db):
 
     scrape(db)
+
+    pirates, uploaders = pirate_rankings(db)
 
     v = None
     while v != 'x':
@@ -209,12 +222,16 @@ def main(db):
             db_cat = db['205']
             cat_torrents = db_cat['torrents']
             torrents = list(cat_torrents.values())
-            torrents.sort(key=itemgetter('title'))
+            torrents.sort(key=lambda x: x.get('series_episode', 0))
+            torrents.sort(key=lambda x: x.get('series_season', 0))
+            torrents.sort(key=lambda x: x.get('series_title', x['title']))
             print('\nAll {} shows'.format(len(torrents)))
-            data = [['guid', '', 'Series', 'S', 'E', 'Seeders', 'Age', 'Uploader']] + [
-                [t['guid'], 'Y' if t.get('downloaded_at') else '',
-                 t.get('series_title', t['title']), t.get('series_season', ''), t.get('series_episode', ''),
-                 t['seeders'], arrow.get(t['uploaded_at']).humanize(), t['uploader']]
+            data = [['guid', '', 'S', 'E', 'Series', 'Seeders', 'Age', 'Size', 'Uploader']] + [
+                [t['guid'], t.get('quality', ''),
+                 t.get('series_season', ''), t.get('series_episode', ''), t.get('series_title', t['title']),
+                 t['seeders'], arrow.get(t['uploaded_at']).humanize(), naturalsize(t['size']),
+                 '{} {}'.format(t['uploader'], uploaders.get(t['uploader'], ''))
+                 ]
                 for t in torrents]
             print(AsciiTable(data).table)
 
@@ -222,17 +239,19 @@ def main(db):
             db_cat = db['205']
             cat_torrents = db_cat['torrents']
             torrents = list(cat_torrents.values())
-            weeks_ago = datetime.now() + timedelta(days=-16)
+            weeks_ago = datetime.now() + timedelta(days=-9)
             torrents = [t for t in torrents if t['uploaded_at'] > weeks_ago]
-            torrents.sort(key=itemgetter('uploaded_at'), reverse=True)
-            torrents.sort(key=itemgetter('title'), reverse=True)
-            # torrents.sort(key=itemgetter('series_season'), reverse=True)
-            # torrents.sort(key=itemgetter('series_title'), reverse=True)
+            torrents.sort(key=itemgetter('uploaded_at'))
+            torrents.sort(key=lambda x: x.get('series_episode', 0))
+            torrents.sort(key=lambda x: x.get('series_season', 0))
+            torrents.sort(key=itemgetter('title'))
             print('\nNew {} episodes'.format(len(torrents)))
-            data = [['guid', '', 'Series', 'S', 'E', 'Seeders', 'Age', 'Uploader']] + [
-                [t['guid'], 'Y' if t.get('downloaded_at') else '',
-                 t.get('series_title', t['title']), t.get('series_season', ''), t.get('series_episode', ''),
-                 t['seeders'], arrow.get(t['uploaded_at']).humanize(), t['uploader']]
+            data = [['guid', '', 'S', 'E', 'Series', 'Seeders', 'Age', 'Size', 'Uploader']] + [
+                [t['guid'], t.get('quality', ''),
+                 t.get('series_season', ''), t.get('series_episode', ''), t.get('series_title', t['title']),
+                 t['seeders'], arrow.get(t['uploaded_at']).humanize(), naturalsize(t['size']),
+                 '{} {}'.format(t['uploader'], uploaders.get(t['uploader'], ''))
+                 ]
                 for t in torrents]
             print(AsciiTable(data).table)
 
@@ -242,9 +261,12 @@ def main(db):
             torrents = list(cat_torrents.values())
             torrents.sort(key=itemgetter('title'))
             print('\nAll {} movies'.format(len(torrents)))
-            data = [['guid', '', 'Title', 'Pirate', 'Seeders', 'Age', 'Uploader']] + [
-                [t['guid'], 'Y' if t.get('downloaded_at') else '', t['title'], t['pirate'], t['seeders'],
-                 arrow.get(t['uploaded_at']).humanize(), t['uploader']]
+            data = [['guid', '', 'Title', 'Seeders', 'Age', 'Size', 'Uploader', 'Pirate']] + [
+                [t['guid'], t.get('quality', ''), t['title'], t['seeders'],
+                 arrow.get(t['uploaded_at']).humanize(), naturalsize(t['size']),
+                 '{} {}'.format(t['uploader'], uploaders.get(t['uploader'], '')),
+                 '{} {}'.format(t['pirate'], pirates.get(t['pirate'], ''))
+                 ]
                 for t in torrents]
             print(AsciiTable(data).table)
 
@@ -254,12 +276,15 @@ def main(db):
             torrents = list(cat_torrents.values())
             weeks_ago = datetime.now() + timedelta(days=-16)
             torrents = [t for t in torrents if t['uploaded_at'] > weeks_ago]
-            torrents.sort(key=itemgetter('seeders'), reverse=True)
+            torrents.sort(key=itemgetter('uploaded_at'), reverse=True)
             print('\nNew {} movies'.format(len(torrents)))
-            data = [['guid', '', 'Title', 'Pirate', 'Seeders', 'Age', 'Uploader']] + [
-                [t['guid'], 'Y' if t.get('downloaded_at') else '',
-                 t['title'], t['pirate'], t['seeders'],
-                 arrow.get(t['uploaded_at']).humanize(), t['uploader']]
+            data = [['guid', '', 'Title', 'Seeders', 'Age', 'Size', 'Uploader', 'Pirate']] + [
+                [t['guid'], t.get('quality', ''),
+                 t['title'], t['seeders'],
+                 arrow.get(t['uploaded_at']).humanize(), naturalsize(t['size']),
+                 '{} {}'.format(t['uploader'], uploaders.get(t['uploader'], '')),
+                 '{} {}'.format(t['pirate'], pirates.get(t['pirate'], ''))
+                ]
                 for t in torrents]
             print(AsciiTable(data).table)
 
@@ -270,7 +295,6 @@ def main(db):
             print('\nAll {} downloaded'.format(len(torrents)))
             print(AsciiTable([[t['guid'], t['title']] for t in torrents]).table)
 
-
         res = input('\n> ')
         if res in ['x', 'q', 'w', 'e', 'a', 's', 'z']:
             v = res
@@ -280,12 +304,20 @@ def main(db):
             except ValueError:
                 pass
             else:
-                torrent = cat_torrents[res]
+                quality = 1 if int(res) > 0 else -1
+                torrent = cat_torrents[str(abs(int(res)))]
                 if torrent.get('downloaded_at'):
-                    del torrent['downloaded_at']
+                    if quality == torrent.get('quality', 0):
+                        del torrent['downloaded_at']
+                        del torrent['quality']
+                    else:
+                        torrent['quality'] = quality
                 else:
-                    subprocess.Popen(['open', torrent['magnet']])
-                    torrent['downloaded_at'] = datetime.now()
+                    torrent['quality'] = quality
+                    if quality > 0:
+                        subprocess.Popen(['open', torrent['magnet']])
+                        torrent['downloaded_at'] = datetime.now()
+                        db_cat['torrents'][torrent['guid']] = torrent
 
 
 if __name__ == '__main__':
