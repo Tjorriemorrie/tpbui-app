@@ -1,16 +1,18 @@
-from gevent.pool import Pool
 import re
 import shelve
 import subprocess
 from datetime import datetime, timedelta
 from operator import itemgetter
-from time import sleep
-from humanize import naturalsize
 
 import arrow
 import requests
 from bs4 import BeautifulSoup
+from gevent.pool import Pool
+from humanize import naturalsize
+from requests.adapters import HTTPAdapter
 from terminaltables import AsciiTable
+from urllib3 import Retry
+from urllib3.exceptions import ProtocolError
 
 host = 'https://thepiratebay.org'
 url_browse = '{host}/browse/{code}/{p}/7/0'
@@ -35,9 +37,24 @@ def scrape(db):
     for cat in CATEGORIES:
         db_cat = db.get(cat['code'], {'torrents': {}, 'scraped_at': datetime(2000, 1, 1)})
         if db_cat['scraped_at'] < hours_ago:
-            scrape_pages(db_cat['torrents'], cat)
+            try:
+                scrape_pages(db_cat['torrents'], cat)
+            except AttributeError as e:
+                print(e)
+                continue
             db_cat['scraped_at'] = datetime.now()
             db[cat['code']] = db_cat
+
+
+def make_request(url):
+    print('making request to {}'.format(url))
+    s = requests.Session()
+    retries = Retry(total=20, backoff_factor=2, status_forcelist=[502, 503, 504])
+    s.mount('https://', HTTPAdapter(max_retries=retries))
+    try:
+        return s.get(url)
+    except Exception:
+        pass
 
 
 def scrape_pages(db_cat, cat):
@@ -45,11 +62,11 @@ def scrape_pages(db_cat, cat):
 
     urls = [url_browse.format(host=host, code=cat['code'], p=p) for p in range(cat['pages'])]
     pool = Pool(size=8)
-    results = pool.map(requests.get, urls)
+    results = pool.map(make_request, urls)
     pool.join()
     # logging.info('res {0}'.format(res.content))
 
-    for result in results:
+    for result in [r for r in results if r]:
         html = BeautifulSoup(result.content, 'html.parser')
         rows = html.find('table', id='searchResult').find_all('tr')[1:-1]
 
@@ -186,7 +203,11 @@ def parse_series(torrent):
 def pirate_rankings(db):
     pirates = {}
     uploaders = {}
-    torrents = list(db['205']['torrents'].values()) + list(db['207']['torrents'].values())
+    torrents = []
+    if '205' in db:
+        torrents.extend(list(db['205']['torrents'].values()))
+    if '207' in db:
+        torrents.extend(list(db['207']['torrents'].values()))
     torrents = [t for t in torrents if t.get('quality')]
     for torrent in torrents:
         if torrent['pirate'] not in pirates:
@@ -222,8 +243,8 @@ def main(db):
             db_cat = db['205']
             cat_torrents = db_cat['torrents']
             torrents = list(cat_torrents.values())
-            torrents.sort(key=lambda x: x.get('series_episode', 0))
-            torrents.sort(key=lambda x: x.get('series_season', 0))
+            torrents.sort(key=lambda x: x.get('series_episode', 0) or 0)
+            torrents.sort(key=lambda x: x.get('series_season', 0) or 0)
             torrents.sort(key=lambda x: x.get('series_title', x['title']))
             print('\nAll {} shows'.format(len(torrents)))
             data = [['guid', '', 'S', 'E', 'Series', 'Seeders', 'Age', 'Size', 'Uploader']] + [
@@ -242,8 +263,8 @@ def main(db):
             weeks_ago = datetime.now() + timedelta(days=-9)
             torrents = [t for t in torrents if t['uploaded_at'] > weeks_ago]
             torrents.sort(key=itemgetter('uploaded_at'))
-            torrents.sort(key=lambda x: x.get('series_episode', 0))
-            torrents.sort(key=lambda x: x.get('series_season', 0))
+            torrents.sort(key=lambda x: x.get('series_episode', 0) or 0)
+            torrents.sort(key=lambda x: x.get('series_season', 0) or 0)
             torrents.sort(key=itemgetter('title'))
             print('\nNew {} episodes'.format(len(torrents)))
             data = [['guid', '', 'S', 'E', 'Series', 'Seeders', 'Age', 'Size', 'Uploader']] + [
