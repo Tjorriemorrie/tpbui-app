@@ -1,3 +1,6 @@
+from operator import itemgetter
+from time import sleep
+
 from gevent import monkey
 monkey.patch_all()
 
@@ -20,9 +23,9 @@ from urllib3 import Retry
 
 
 HOST = 'https://1337x.to'
-TELEVISION = 'sort-cat/TV/{}/desc'
+TELEVISION = 'sort-sub/41/{}/desc'
 TV_PAGES = 50
-MOVIES = 'sort-cat/Movies/{}/desc'
+MOVIES = 'sort-sub/42/{}/desc'
 MOVIE_PAGES = 50
 
 db = sqlite3.connect('1337x.sqlite')
@@ -58,6 +61,8 @@ def main(skip_scrape=False):
         if v:
             filters = MENU[v]
             torrents = load_data(filters)
+            for torrent in torrents:
+                torrent['title'] = torrent['title'].replace('.', ' ')
             # torrents = make_it_seem_right(torrents)
 
             data = [['id', 'Title', 'Quality', 'Size', 'Seeders', 'Date', 'Uploader']] + [
@@ -124,6 +129,7 @@ def scrape_movies():
     data = []
     for ordering in ['leechers', 'seeders']:
         for page in range(1, MOVIE_PAGES + 1):
+            sleep(0.1)
             url = '{}/{}/{}/'.format(HOST, MOVIES.format(ordering), page)
             jobs.append(gevent.spawn(scrape_page, url, data))
     gevent.joinall(jobs)
@@ -146,9 +152,16 @@ def scrape_page(url, data):
     res.raise_for_status()
 
     html = BeautifulSoup(res.content, 'html.parser')
-    rows = html.find('table', class_='table-list').find_all('tr')
-    parser = parser_()
+    if html.findAll(text=' No results were returned. '):
+        print('No data for {}'.format(url))
+        return data
 
+    try:
+        rows = html.find('table', class_='table-list').find_all('tr')
+    except AttributeError as exc:
+        raise ValueError('with url {}'.format(url)) from exc
+
+    parser = parser_()
     for row in rows[1:]:
         cols = row.find_all('td')
 
@@ -209,8 +222,9 @@ def save_data(cat, data):
 def load_data(filters):
     c = db.cursor()
     filters = ' and '.join(filters)
-    query = ' WHERE '.join(['SELECT * FROM torrents', filters])
-    query += ' ORDER BY title'
+    selection = 'SELECT id, category, quality, REPLACE(title, ".", " "), web, seeders, leechers, uploaded_at, size, uploader FROM torrents'
+    query = ' WHERE '.join([selection, filters])
+    # query += ' ORDER BY title'
     rows = c.execute(query).fetchall()
     data = [{
         'id': r[0],
@@ -224,6 +238,7 @@ def load_data(filters):
         'size': r[8],
         'uploader': r[9],
     } for r in rows]
+    data.sort(key=itemgetter('title'))
     return data
 
 

@@ -1,7 +1,0 @@
-requests
-beautifulsoup4
-python-dateutil
-arrow
-terminaltables
-gevent
-humanize
