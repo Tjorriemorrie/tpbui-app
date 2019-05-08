@@ -257,8 +257,8 @@ def main(db):
             print(AsciiTable(data).table)
 
         if v == 'w':
-            db_cat = db['205']
-            cat_torrents = db_cat['torrents']
+            db_cat = db[u'205']
+            cat_torrents = db_cat[u'torrents']
             torrents = list(cat_torrents.values())
             weeks_ago = datetime.now() + timedelta(days=-9)
             torrents = [t for t in torrents if t['uploaded_at'] > weeks_ago]
@@ -336,6 +336,7 @@ def main(db):
                 else:
                     torrent['quality'] = quality
                     if quality > 0:
+                        print(torrent[u'magnet'])
                         subprocess.Popen(['open', torrent['magnet']])
                         torrent['downloaded_at'] = datetime.now()
                         db_cat['torrents'][torrent['guid']] = torrent

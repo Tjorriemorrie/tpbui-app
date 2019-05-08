@@ -24,17 +24,19 @@ from urllib3 import Retry
 
 HOST = 'https://1337x.to'
 TELEVISION = 'sort-sub/41/{}/desc'
-TV_PAGES = 50
+TV_PAGES = 25
 MOVIES = 'sort-sub/42/{}/desc'
-MOVIE_PAGES = 50
+MOVIE_PAGES = 25
+TRENDING = 'trending/w'
 
 db = sqlite3.connect('1337x.sqlite')
 
 
 TEN_DAYS_AGO = datetime.now() + timedelta(days=-10)
+SEVEN_DAYS_AGO = datetime.now() + timedelta(days=-7)
 MENU = {
     'q': ['category = "tv"'],
-    'w': ['category = "tv"', 'uploaded_at > "{}"'.format(TEN_DAYS_AGO.strftime('%Y-%m-%d'))],
+    'w': ['category = "tv"', 'uploaded_at > "{}"'.format(SEVEN_DAYS_AGO.strftime('%Y-%m-%d'))],
     'a': ['category = "movies"'],
     's': ['category = "movies"', 'uploaded_at > "{}"'.format(TEN_DAYS_AGO.strftime('%Y-%m-%d'))],
 }
@@ -86,6 +88,7 @@ def main(skip_scrape=False):
         else:
             torrent = [t for t in torrents if t['id'] == int(res)][0]
             url = HOST + torrent['web']
+            print(url)
             if sys.platform == 'darwin':  # in case of OS X
                 subprocess.Popen(['open', url])
             else:
@@ -103,6 +106,7 @@ def make_it_seem_right(torrents):
             torrents = [t for t in torrents if t['title'] != closest[0]]
         else:
             current = torrents.pop(0)
+
         by_kind.append(current)
     assert len(by_kind) == original_len
     return by_kind
@@ -111,6 +115,7 @@ def make_it_seem_right(torrents):
 def scrape():
     scrape_television()
     scrape_movies()
+    scrape_trending()
 
 
 def scrape_television():
@@ -136,6 +141,17 @@ def scrape_movies():
     save_data('movies', data)
 
 
+def scrape_trending():
+    jobs = []
+    data = []
+    trending_categories = ['tv', 'documentaries']
+    for category in trending_categories:
+        url = '{}/{}/{}/'.format(HOST, TRENDING, category)
+        jobs.append(gevent.spawn(scrape_page, url, data))
+    gevent.joinall(jobs)
+    save_data('tv', data)
+
+
 def make_request(url):
     print('making request to {}'.format(url))
     s = requests.Session()
@@ -158,6 +174,8 @@ def scrape_page(url, data):
 
     try:
         rows = html.find('table', class_='table-list').find_all('tr')
+        # print(rows[0])
+        # exit()
     except AttributeError as exc:
         raise ValueError('with url {}'.format(url)) from exc
 
@@ -167,16 +185,26 @@ def scrape_page(url, data):
 
         # quality
         quality = cols[0].find_all('a')[0]
-        quality = quality.find('i')['class']
-        quality = quality[0].replace('flaticon-', '')
+        try:
+            quality = quality.find('i')['class']
+            quality = quality[0].replace('flaticon-', '')
+        except TypeError:
+            quality = '?'
 
         # title
-        title = cols[0].find_all('a')[1]
+        try:
+            title = cols[0].find_all('a')[1]
+        except IndexError:
+            title = cols[0].find_all('a')[0]
         title = title.text
 
         # web
-        web = cols[0].find_all('a')[1]
+        try:
+            web = cols[0].find_all('a')[1]
+        except IndexError:
+            web = cols[0].find_all('a')[0]
         web = web['href']
+        # exit(print(web))
 
         # seeders
         seeders = int(cols[1].text)
