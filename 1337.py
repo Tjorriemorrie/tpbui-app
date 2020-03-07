@@ -241,9 +241,15 @@ def save_data(cat, data):
     for item in data:
         rows = c.execute('SELECT * FROM torrents WHERE web="{}"'.format(item['web'])).fetchall()
         if not rows:
-            c.execute('INSERT INTO torrents (category, quality, title, web, seeders, leechers, uploaded_at, size, uploader) '
-                      'VALUES("{category}", "{quality}", "{title}", "{web}", {seeders}, {leechers}, "{uploaded_at}", "{size}", "{uploader}")'.format(
-                category=cat, **item))
+            try:
+                # escape input
+                item = {k: v.replace('"', '') if isinstance(v, str) else v for k, v in item.items()}
+                c.execute('INSERT INTO torrents (category, quality, title, web, seeders, leechers, uploaded_at, size, uploader) '
+                          'VALUES("{category}", "{quality}", "{title}", "{web}", {seeders}, {leechers}, "{uploaded_at}", "{size}", "{uploader}")'.format(
+                    category=cat, **item))
+            except Exception as exc:
+                print(item)
+                raise
     db.commit()
 
 
