@@ -14,7 +14,7 @@ from terminaltables import AsciiTable
 from urllib3 import Retry
 
 MIN_SIZE = 100_000
-TOP_PRICE = 2_500_000
+TOP_PRICE = 3_000_000
 BEDROOMS = 0
 BATHROOMS = 0
 GARAGES = 0
@@ -49,6 +49,7 @@ def show():
         else:
             main.append(l)
 
+    # exit(pretty_dump(main))
     print_listings_table('Junk', junk)
     print_listings_table('Main', main)
 
@@ -79,9 +80,16 @@ def print_listings_table(header, data):
     print(AsciiTable(rows).table)
 
 
+def pretty_dump(data):
+    for item in data:
+        print(f'[{item["area"]}] {item["address"]}')
+        print(f'R{round(item["price"] / 1_000_000, 2)} mil  {item["size"] // 10000} ha')
+        print(f'[{item["rating"]}] {HOST}{item["url"]}')
+        print('')
+
 def scrape():
     for loc, url in URLS.items():
-        print(f'scraping {loc}')
+        print(f'scraping {loc}: {HOST}{url}1')
         scrape_page(url)
 
 
