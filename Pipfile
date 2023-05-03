@@ -11,8 +11,8 @@ beautifulsoup4 = "*"
 python-dateutil = "*"
 arrow = "*"
 terminaltables = "*"
-gevent = "*"
 humanize = "*"
+gevent = "*"
 
 [requires]
 python_version = "3.7"

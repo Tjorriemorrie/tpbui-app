@@ -15,8 +15,8 @@ from urllib3 import Retry
 HOST = 'https://www.privateproperty.co.za'
 URLS = {
     # 'harties land': '/for-sale/north-west/hartbeespoort-dam/74?tp=1000000&pt=7'
-    'harties farm': '/for-sale/north-west/hartbeespoort-dam/74?tp=2000000&pt=1&si=1706,2314,585,587',
-    'krug farm': '/for-sale/gauteng/west-rand/krugersdorp/840?tp=2000000&pt=1&si=1704,291,2659,295,823',
+    'harties farm': '/for-sale/north-west/hartbeespoort-dam/74?tp=2500000&pt=1&si=1706,2314,585,587',
+    'krug farm': '/for-sale/gauteng/west-rand/krugersdorp/840?tp=2500000&pt=1&si=1704,291,2659,295,823',
 }
 
 db = sqlite3.connect('privateproperty.sqlite')

@@ -3,6 +3,7 @@ import re
 import sqlite3
 from datetime import datetime, timedelta, date
 from operator import itemgetter
+from random import choice, shuffle
 
 import arrow
 import requests
@@ -12,27 +13,14 @@ from requests.adapters import HTTPAdapter
 from terminaltables import AsciiTable
 from urllib3 import Retry
 
-HOST = 'https://www.realestate.com.au'
+HOST = 'https://www.privateproperty.co.za'
 URLS = {
-    # '2146 toongabbie': '/rent/property-house-between-500-625-in-nsw+2146/list-1?includeSurrounding=false',
-    '2147 seven hills': '/rent/property-house-between-500-625-in-nsw+2147/list-1?includeSurrounding=false',
-    # '2148 blacktown': '/rent/property-house-between-500-625-in-nsw+2148/list-1?includeSurrounding=false',
-    # 2150 parramatta x
-    # 2151 north rocks x
-    '2152 northmead': '/rent/property-house-between-500-625-in-nsw+2152/list-1?includeSurrounding=false',
-    '2153 bella vista/baulkham hills': '/rent/property-house-between-500-625-in-nsw+2153/list-1?includeSurrounding=false',
-    '2154 castle hill': '/rent/property-house-between-500-625-in-nsw+2154/list-1?includeSurrounding=false',
-    '2155 rouse hill': '/rent/property-house-between-500-625-in-nsw+2155/list-1?includeSurrounding=false',
-    '2156 annangrove/glenhaven': '/rent/property-house-between-500-625-in-nsw+2156/list-1?includeSurrounding=false',
-    '2158 dural': '/rent/property-house-between-500-625-in-nsw+2158/list-1?includeSurrounding=false',
-    # '2762 schofields': '/rent/property-house-between-500-625-in-nsw+2762/list-1?includeSurrounding=false',
-    '2763 acacia gardens': '/rent/property-house-between-500-625-in-nsw+2763/list-1?includeSurrounding=false',
-    # 2767 woodcroft x
-    '2768 glenwood (stanhope)': '/rent/property-house-between-500-625-in-nsw+2768/list-1?includeSurrounding=false',
-    # '2769 the ponds': '/rent/property-house-between-500-625-in-nsw+2769/list-1?includeSurrounding=false',
+    # 'harties land': '/for-sale/north-west/hartbeespoort-dam/74?tp=1000000&pt=7'
+    'harties farm': '/for-sale/north-west/hartbeespoort-dam/74?tp=2500000&pt=1&si=1706,2314,585,587',
+    'krug farm': '/for-sale/gauteng/west-rand/krugersdorp/840?tp=2500000&pt=1&si=1704,291,2659,295,823',
 }
 
-db = sqlite3.connect('realestate.sqlite')
+db = sqlite3.connect('privateproperty.sqlite')
 
 
 def main(skip_scrape=False, reload_zero=False):
@@ -41,6 +29,7 @@ def main(skip_scrape=False, reload_zero=False):
         reload_zero_rated()
 
     if not skip_scrape:
+        unzero_random()
         scrape()
 
     show()
@@ -48,36 +37,21 @@ def main(skip_scrape=False, reload_zero=False):
 
 def show():
     listings = load_data()
-    listings.sort(key=itemgetter('price'), reverse=True)
+    listings.sort(key=itemgetter('location'))
+    listings.sort(key=itemgetter('ppu'), reverse=True)
     listings.sort(key=itemgetter('rating'))
 
-    # not found
+    main = [l for l in listings
+            if l['not_found'] < 3
+            # and l['structure'] == 'Farm'
+    ]
+
+    # exit(dump(main))
+
     not_founds = [l for l in listings if l['not_found'] >= 3]
-    single_cars = [l for l in listings if l['not_found'] < 3 and int(l['cars']) < 2]
-    main = [l for l in listings if l['not_found'] < 3 and int(l['cars']) >= 2]
+    # print_listings_table('Not found', not_founds)
 
-    print_listings_table('Not found', not_founds)
-    print_listings_table('Single ports', single_cars)
     print_listings_table('Main', main)
-
-    # yesterday = datetime.now() - timedelta(days=1)
-    # midnight = arrow.get(yesterday.year, yesterday.month, yesterday.day)
-
-    # # known
-    # known = [l for l in listings if not l['open_at'] and l['added_at'] < midnight]
-    # print_listings_table('Known', known)
-    #
-    # # new
-    # new = [l for l in listings if not l['open_at'] and l['added_at'] >= midnight]
-    # new.sort(key=itemgetter('price'), reverse=True)
-    # new.sort(key=itemgetter('rating'))
-    # print_listings_table('New', new)
-    #
-    # # opened
-    # opened = [l for l in listings if l['open_at']]
-    # opened.sort(key=itemgetter('price'), reverse=True)
-    # opened.sort(key=itemgetter('rating'))
-    # print_listings_table('Opened', opened)
 
     res = input('\n> ')
     id, rating = res.split()
@@ -85,20 +59,27 @@ def show():
     show()
 
 
+def dump(listings):
+    for l in listings:
+        print(f'{l["rating"]} {l["size"] // 1000 / 10}ha R{l["price"]} (R/m2: {l["ppu"]})' )
+        print(f'{HOST}{l["url"]}')
+        print('')
+
+
 def print_listings_table(header, data):
     if not data:
         return
 
     print(f'{header}:')
-    rows = [['id', '', 'Price', 'Address', 'R - B - C', 'Open day', 'Days listed', 'URL', '404']]
+    rows = [['id', '', 'R/m2', 'Price', 'Size', 'Address', 'Days listed', 'URL', '404']]
     for item in data:
         rows.append([
             item['id'],
             item['rating'],
+            item['ppu'],
             item['price'],
-            item['address'],
-            f'{item["bedrooms"]} - {item["bathrooms"]} - {item["cars"]}',
-            item['open_at'].strftime('%a %d %b') if item['open_at'] else '',
+            item['size'],
+            item['address'] + ', ' + item['location'],
             (arrow.utcnow() - item['added_at']).days,
             f'{HOST}{item["url"]}',
             item['not_found'],
@@ -109,7 +90,7 @@ def print_listings_table(header, data):
 def scrape():
     set_all_not_found()
     for loc, url in URLS.items():
-        print(f'scraping {loc}')
+        print(f'scraping {loc}: {url}')
         scrape_page(url)
     remove_marked()
 
@@ -122,92 +103,104 @@ def make_request(url):
     return s.get(url)
 
 
-def scrape_page(url):
+def scrape_page(url, page=1):
+    print(f'page {page}...', end='')
     data = []
 
     headers = {
         'User-agent': 'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0'
     }
-    res = requests.get(f'{HOST}{url}', headers=headers)
+    res = requests.get(f'{HOST}{url}&page={page}', headers=headers)
     res.raise_for_status()
 
     html = BeautifulSoup(res.content, 'html.parser')
-    if '403 - Permission Denied' in html:
-        raise Exception('Permission denied')
     # exit(print(html))
 
-    articles = html.find(id='wrapper').find_all('article', class_='results-card')
+    # no more pages
+    if html.find('div', class_='noResultsInnerBox'):
+        print('done')
+        return
+
+    articles = html.find_all(class_='listingResult row')
     # exit(print(articles[0]))
 
     parser = parser_()
     for article in articles:
         # url
-        href = article.find('a', class_='residential-card__details-link').get('href')
+        href = article.get('href')
+
+        info_holder = article.find('div', class_='infoHolder')
+        title = info_holder.find('div', class_='title').text.title().split()
 
         # address
-        address = article.find('a', class_='residential-card__details-link').text.title()
+        try:
+            address = info_holder.find('div', class_='address').text.title()
+        except AttributeError:
+            # print(f'No address for {href}')
+            address = 'unknown'
+
+        # structure
+        structure = info_holder.find('div', class_='propertyType').text.title()
+
+        # location
+        location = title[-1]
 
         # price
         try:
-            price_text = article.find('div', class_='residential-card__price').text
-            price = re.findall(r'\$(\d+)', price_text)[0]
+            price_text = article.find('div', class_='priceDescription').text.replace(' ', '')
+            price = re.findall(r'(\d+)', price_text)[0]
         except (IndexError, AttributeError):
-            continue
-            # exit(print(f'Price? {price_text}'))
+            if price_text == 'OnAuction':
+                price = '10000'
+            else:
+                if price_text in ['Sold', 'Price on Application', 'PriceonApplication']:
+                    continue
+                exit(print(f'Price? {price_text}'))
 
-        features = article.find('ul', class_='general-features')
+        # size
+        size = title[0]
+        if title[1].lower() != 'm²':
+            if title[1] == 'Ha':
+                size = float(size) * 10000
+            else:
+                if size in ['Farm']:
+                    continue
+                exit(print(f'size? {size} {title[1]}'))
+
         try:
-            bedrooms = int(features.find('span', class_='general-features__beds').text)
+            bedrooms = float(info_holder.find('div', class_='icon bedroom').previous_sibling.previous_sibling.text)
         except AttributeError:
             bedrooms = 0
         try:
-            bathrooms = int(features.find('span', class_='general-features__baths').text)
+            bathrooms = float(info_holder.find('div', class_='icon bathroom').previous_sibling.previous_sibling.text)
         except AttributeError:
             bathrooms = 0
         try:
-            cars = int(features.find('span', class_='general-features__cars').text)
+            cars = float(info_holder.find('div', class_='icon garage').previous_sibling.previous_sibling.text)
         except AttributeError:
             cars = 0
 
-        try:
-            open_at_text = article.find('span', class_='inspection__long-label').text
-            open_at = open_at_text.lstrip('Open ')
-            if open_at.startswith('today'):
-                time_day = datetime.now()
-                open_at = open_at.replace('today', time_day.strftime("%Y-%m-%d"))
-            if open_at.startswith('tomorrow'):
-                time_day = datetime.now() + timedelta(days=1)
-                open_at = open_at.replace('tomorrow', time_day.strftime("%Y-%m-%d"))
-            open_at = parser.parse(open_at)
-            open_at = open_at.strftime('%Y-%m-%d %H:%M')
-        except AttributeError:
-            open_at = ''
-
         item = {
             'url': href,
+            'structure': structure,
             'address': address,
+            'location': location,
             'price': price,
+            'size': size,
             'bedrooms': bedrooms,
             'bathrooms': bathrooms,
             'cars': cars,
-            'new': False,
-            'open_at': open_at,
             'added_at': datetime.now().strftime('%Y-%m-%d'),
             'rating': 100,
         }
         data.append(item)
     # exit(print(data))
-    print(f'finished scraping {url}')
 
     # save
     save_data(data)
 
     # go to next page
-    try:
-        next_link = html.find('li', class_='nextLink').find('a').get('href')
-        scrape_page(next_link)
-    except AttributeError:
-        pass
+    scrape_page(url, page + 1)
 
 
 def set_all_not_found():
@@ -224,6 +217,18 @@ def remove_marked():
     db.commit()
 
 
+def unzero_random():
+    c = db.cursor()
+    selection = 'SELECT id FROM properties'
+    raw = c.execute(selection).fetchall()
+    rows = [r[0] for r in raw]
+    shuffle(rows)
+    sel = rows[:len(rows) // 50]
+    ids = ",".join(map(str, sel))
+    c.execute(f'UPDATE properties SET rating=100 WHERE id IN ({ids})')
+    print(f'Resetted {ids}')
+
+
 def save_rating(id_, rating):
     c = db.cursor()
     c.execute(f'UPDATE properties SET rating={int(rating)} WHERE id={int(id_)}')
@@ -234,38 +239,45 @@ def save_rating(id_, rating):
 def save_data(data):
     c = db.cursor()
     for item in data:
-        rows = c.execute(f'SELECT id FROM properties WHERE address="{item["address"]}"').fetchall()
+        rows = c.execute(f'SELECT id FROM properties WHERE url="{item["url"]}"').fetchall()
         if rows:
-            c.execute(f'UPDATE properties SET new="{item["new"]}", open_at="{item["open_at"]}", '
-                      f'price="{item["price"]}", not_found=0 WHERE id={rows[0][0]}')
+            c.execute(f'UPDATE properties SET size="{item["size"]}", price="{item["price"]}", not_found=0 WHERE id={rows[0][0]}')
         else:
             c.execute(
-                'INSERT INTO properties (url, address, price, bedrooms, bathrooms, cars, new, open_at, added_at, rating, not_found) '
-                'VALUES("{url}", "{address}", "{price}", "{bedrooms}", {bathrooms}, {cars}, "{new}", "{open_at}", "{added_at}", "{rating}", 0)'.format(
-                 **item))
+                'INSERT INTO properties (url, structure, address, location, price, size, bedrooms, bathrooms, cars, added_at, rating, not_found) '
+                'VALUES("{url}", "{structure}", "{address}", "{location}", "{price}", "{size}", "{bedrooms}", {bathrooms}, {cars}, "{added_at}", "{rating}", 0)'.format(**item))
     db.commit()
+    print('saved')
 
 
 def load_data():
     c = db.cursor()
-    selection = 'SELECT id, url, address, price, bedrooms, bathrooms, cars, new, open_at, added_at, rating, not_found' \
-                ' FROM properties'
+    selection = 'SELECT id, url, structure, address, location, price, ' \
+                'size, bedrooms, bathrooms, cars, added_at, rating, not_found ' \
+                'FROM properties'
     rows = c.execute(selection).fetchall()
     data = [{
         'id': r[0],
         'url': r[1],
-        'address': r[2],
-        'price': r[3],
-        'bedrooms': r[4],
-        'bathrooms': r[5],
-        'cars': r[6],
-        'new': r[7],
-        'open_at': arrow.get(r[8]) if r[8] else '',
-        'added_at': arrow.get(r[9]),
-        'rating': r[10],
-        'not_found': r[11],
+        'structure': r[2],
+        'address': r[3],
+        'location': r[4],
+        'price': r[5],
+        'size': r[6],
+        'bedrooms': r[7],
+        'bathrooms': r[8],
+        'cars': r[9],
+        'added_at': arrow.get(r[10]),
+        'rating': r[11],
+        'not_found': r[12],
     } for r in rows]
-    data.sort(key=itemgetter('rating'))
+    # add price per m2
+    for l in data:
+        l['ppu'] = l['price'] // l['size']
+    # drop zeros
+    data = [l for l in data if l['rating']]
+    # min size
+    data = [l for l in data if l['size'] >= 90000]
     return data
 
 
@@ -283,13 +295,17 @@ def setup():
         CREATE TABLE properties(
             id INTEGER PRIMARY KEY,
             url TEXT,
+            structure TEXT,
             address TEXT,
+            location TEXT,
             price INTEGER,
-            bedrooms INTEGER,
-            bathrooms INTEGER,
+
+            size INTEGER,
+
+            bedrooms TEXT,
+            bathrooms TEXT,
             cars TEXT,
-            new INTEGER,
-            open_at TEXT,
+
             added_at TEXT,
             rating INTEGER,
             not_found INTEGER
@@ -300,7 +316,7 @@ def setup():
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Scrape realestate')
+    parser = argparse.ArgumentParser(description='Scrape privateproperty')
     parser.add_argument('--setup', dest='setup', action='store_true',
                         help='Recreate database.')
     parser.add_argument('--skip', dest='skip_scrape', action='store_true',
